@@ -22,19 +22,19 @@
 class JsonReader
 {
 public:
-    JsonReader(const QString &);			//!< A \e constructor for saving \b name of file
-    JsonReader() = default;					//!< A default \e constructor
-    ~JsonReader() = default;				//!< A default \e destructor
+    JsonReader(const QString &);            //!< A \e constructor for saving \b name of file
+    JsonReader() = default;                 //!< A default \e constructor
+    ~JsonReader() = default;                //!< A default \e destructor
 
 public:
-    void readFromJson(QVector<Node *> &, QVector<Edge *> &);							//!< A \e method for reading from \a json \a file
-    static void readFromJson(const QString &, QVector<Node *> &, QVector<Edge *> &);	//!< A \e method for reading from \a json \a file with particular \b name
+    void readFromJson(QVector<Node *> &, QVector<Edge *> &);                            //!< A \e method for reading from \a json \a file
+    static void readFromJson(const QString &, QVector<Node *> &, QVector<Edge *> &);    //!< A \e method for reading from \a json \a file with particular \b name
 
 public:
-    void setName(const QString &name);		//!< A method for setting \b name of file into variable
+    void setName(const QString &name);      //!< A method for setting \b name of file into variable
 
 private:
-    QString name { "config.json" };			//!< A \b name of \a json \a file
+    QString name { "config.json" };         //!< A \b name of \a json \a file
 };
 
 #endif // JSONREADER_H
