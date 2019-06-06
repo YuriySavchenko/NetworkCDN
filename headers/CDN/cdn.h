@@ -16,21 +16,21 @@
 class CDN
 {
 public:
-    CDN();							//!< A \e constructor
-    CDN(const QVector<Edge *> &); 	//!< A \e particular constructor with parameter list of \b edges
-    ~CDN();							//!< A \e destructor
+    CDN();                          //!< A \e constructor
+    CDN(const QVector<Edge *> &);   //!< A \e particular constructor with parameter list of \b edges
+    ~CDN();                         //!< A \e destructor
 
 private:
-    Matrix matrix;					//!< A \e variable \b matrix for saving \b hosts
-    QVector<Edge *> edges;			//!< A \e variable for saving \a vector of \b edges
+    Matrix matrix;                  //!< A \e variable \b matrix for saving \b hosts
+    QVector<Edge *> edges;          //!< A \e variable for saving \a vector of \b edges
 
 public:
-    QVector<Edge *>& getEdges();	//!< A \e function for getting \b edges
-    Matrix& getMatrix();			//!< A \e function for getting \b matrix
+    QVector<Edge *>& getEdges();    //!< A \e function for getting \b edges
+    Matrix& getMatrix();            //!< A \e function for getting \b matrix
 
 public:
-    void setEdges(const QVector<Edge *> &);		//!< A \e method for saving \a vector of \b edges
-    void setMatrix(const Matrix &);				//!< A \e method for saving \b matrix
+    void setEdges(const QVector<Edge *> &);     //!< A \e method for saving \a vector of \b edges
+    void setMatrix(const Matrix &);             //!< A \e method for saving \b matrix
 };
 
 #endif // CDN_H
