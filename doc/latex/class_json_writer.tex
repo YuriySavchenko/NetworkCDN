@@ -1,0 +1,58 @@
+\hypertarget{class_json_writer}{}\section{Json\+Writer Class Reference}
+\label{class_json_writer}\index{JsonWriter@{JsonWriter}}
+
+
+The \mbox{\hyperlink{class_json_writer}{Json\+Writer}} class~\newline
+{\bfseries{\mbox{\hyperlink{class_json_writer}{Json\+Writer}}}} it\textquotesingle{}s special {\itshape class} which allows write configuration of graph to {\itshape json} file.  
+
+
+
+
+{\ttfamily \#include $<$jsonwriter.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_json_writer_a5458b7bff2acba6b3f9ac4b776baf279}\label{class_json_writer_a5458b7bff2acba6b3f9ac4b776baf279}} 
+\mbox{\hyperlink{class_json_writer_a5458b7bff2acba6b3f9ac4b776baf279}{Json\+Writer}} (const Q\+String \&name)
+\begin{DoxyCompactList}\small\item\em A {\itshape constructor} which save {\bfseries{name}} of {\itshape file}. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_json_writer_ad6c3ee66a29dea6f3adb7620a57588eb}\label{class_json_writer_ad6c3ee66a29dea6f3adb7620a57588eb}} 
+\mbox{\hyperlink{class_json_writer_ad6c3ee66a29dea6f3adb7620a57588eb}{Json\+Writer}} (const Q\+Vector$<$ \mbox{\hyperlink{class_node}{Node}} $\ast$ $>$ \&nodes)
+\begin{DoxyCompactList}\small\item\em A {\itshape constructor} which save list of {\bfseries{nodes}}. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_json_writer_af65af2f72afc8d02cf64570bf2416050}\label{class_json_writer_af65af2f72afc8d02cf64570bf2416050}} 
+\mbox{\hyperlink{class_json_writer_af65af2f72afc8d02cf64570bf2416050}{Json\+Writer}} (const Q\+String \&name, const Q\+Vector$<$ \mbox{\hyperlink{class_node}{Node}} $\ast$ $>$ \&nodes)
+\begin{DoxyCompactList}\small\item\em A {\itshape constructor} which save {\bfseries{name}} of {\itshape file} and list of {\bfseries{nodes}}. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_json_writer_acba8e767c0027b578801970a790a30e1}\label{class_json_writer_acba8e767c0027b578801970a790a30e1}} 
+\mbox{\hyperlink{class_json_writer_acba8e767c0027b578801970a790a30e1}{Json\+Writer}} ()=default
+\begin{DoxyCompactList}\small\item\em A {\itshape default} {\itshape constructor}. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_json_writer_ad42c42cdd46a5cec2334a6e4aab1da08}\label{class_json_writer_ad42c42cdd46a5cec2334a6e4aab1da08}} 
+\mbox{\hyperlink{class_json_writer_ad42c42cdd46a5cec2334a6e4aab1da08}{$\sim$\+Json\+Writer}} ()=default
+\begin{DoxyCompactList}\small\item\em A {\itshape default} {\itshape destructor}. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_json_writer_a02d176c354e11837f771a3e80fe80094}\label{class_json_writer_a02d176c354e11837f771a3e80fe80094}} 
+void \mbox{\hyperlink{class_json_writer_a02d176c354e11837f771a3e80fe80094}{write\+To\+Json}} ()
+\begin{DoxyCompactList}\small\item\em A {\itshape method} for writing to {\itshape json} {\itshape file}. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_json_writer_a1098975c6b90a6b6756c44ac18da75a4}\label{class_json_writer_a1098975c6b90a6b6756c44ac18da75a4}} 
+void \mbox{\hyperlink{class_json_writer_a1098975c6b90a6b6756c44ac18da75a4}{write\+To\+Json}} (const Q\+Vector$<$ \mbox{\hyperlink{class_node}{Node}} $\ast$ $>$ \&nodes)
+\begin{DoxyCompactList}\small\item\em A {\itshape method} for writing to {\itshape json} {\itshape file} by particular list of {\bfseries{nodes}}. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_json_writer_a0f7d5d7e07a50c029d167257742e3003}\label{class_json_writer_a0f7d5d7e07a50c029d167257742e3003}} 
+void \mbox{\hyperlink{class_json_writer_a0f7d5d7e07a50c029d167257742e3003}{set\+Name}} (const Q\+String \&name)
+\begin{DoxyCompactList}\small\item\em A {\itshape method} for setting {\bfseries{name}} of {\itshape file} into variable. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_json_writer_a6d7cd109ecc4d499c745472441184550}\label{class_json_writer_a6d7cd109ecc4d499c745472441184550}} 
+void \mbox{\hyperlink{class_json_writer_a6d7cd109ecc4d499c745472441184550}{set\+Nodes}} (const Q\+Vector$<$ \mbox{\hyperlink{class_node}{Node}} $\ast$ $>$ \&nodes)
+\begin{DoxyCompactList}\small\item\em A {\itshape method} for setting {\bfseries{nodes}} of {\bfseries{graph}} into variable. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_json_writer_a7845614c8c208f9ab826c97603ab274c}\label{class_json_writer_a7845614c8c208f9ab826c97603ab274c}} 
+static void \mbox{\hyperlink{class_json_writer_a7845614c8c208f9ab826c97603ab274c}{write\+To\+Json}} (const Q\+Vector$<$ \mbox{\hyperlink{class_node}{Node}} $\ast$ $>$ nodes, const Q\+String \&name)
+\begin{DoxyCompactList}\small\item\em A {\itshape method} for writing to {\itshape json} {\itshape file} by particular list of {\bfseries{nodes}} and certain {\bfseries{name}} of {\itshape file}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The \mbox{\hyperlink{class_json_writer}{Json\+Writer}} class~\newline
+{\bfseries{\mbox{\hyperlink{class_json_writer}{Json\+Writer}}}} it\textquotesingle{}s special {\itshape class} which allows write configuration of graph to {\itshape json} file. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+headers/\+Parse/jsonwriter.\+h\item 
+sources/\+Parse/jsonwriter.\+cpp\end{DoxyCompactItemize}
