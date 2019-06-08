@@ -27,7 +27,7 @@ void JsonReader::readFromJson(const QString &name, QVector<Node *> &nodes, QVect
 
         for (int i=0; i < jArray.size(); i++) {
             QJsonObject jObj = jArray[i].toObject();
-            Node *node = new Node(jObj["name"].toString());
+            Node *node = new Node(QString::number(jObj["name"].toInt()));
             node->setPos(QPointF {jObj["x"].toDouble(), jObj["y"].toDouble()});
             nodes.append(node);
         }
@@ -38,9 +38,9 @@ void JsonReader::readFromJson(const QString &name, QVector<Node *> &nodes, QVect
 
             if (jArr.size() >= 1) {
                 for (int j=0; j < jArr.size(); j++) {
-                    int source = jArr[j].toObject()["source"].toString().toInt()-1;
-                    int target = jArr[j].toObject()["target"].toString().toInt()-1;
-                    Edge *edge = new Edge(nodes[source], nodes[target], jArr[j].toObject()["metric"].toString());
+                    int source = jArr[j].toObject()["source"].toInt()-1;
+                    int target = jArr[j].toObject()["target"].toInt()-1;
+                    Edge *edge = new Edge(nodes[source], nodes[target], QString::number(jArr[j].toObject()["metric"].toDouble()));
                     edges.append(edge);
                 }
             }
