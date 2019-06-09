@@ -46,14 +46,14 @@ void JsonWriter::writeToJson(const QVector<Node *> nodes, const QString &name)
             for (int j=0; j < nodes[i]->edges().size(); j++) {
                 if (nodes[i]->name != nodes[i]->edges()[j]->destNode()->name) {
                     QVariantMap edge;
-                    edge.insert("source", nodes[i]->name);
-                    edge.insert("target", nodes[i]->edges()[j]->destNode()->name);
-                    edge.insert("metric", nodes[i]->edges()[j]->getMetric());
+                    edge.insert("source", nodes[i]->name.toInt());
+                    edge.insert("target", nodes[i]->edges()[j]->destNode()->name.toInt());
+                    edge.insert("metric", nodes[i]->edges()[j]->getMetric().toDouble());
                     edges.append(edge);
                 }
             }
 
-            node.insert("name", nodes[i]->name);
+            node.insert("name", nodes[i]->name.toInt());
             node.insert("x", nodes[i]->pos().rx());
             node.insert("y", nodes[i]->pos().ry());
             node.insert("edges", edges);
