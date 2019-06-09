@@ -1,0 +1,117 @@
+{
+    "nodes": [
+        {
+            "edges": [
+                {
+                    "metric": 0.4,
+                    "source": 1,
+                    "target": 5
+                }
+            ],
+            "name": "1",
+            "x": -372.5,
+            "y": -317.5
+        },
+        {
+            "edges": [
+                {
+                    "metric": 0.3,
+                    "source": 2,
+                    "target": 3
+                },
+                {
+                    "metric": 0.8,
+                    "source": 2,
+                    "target": 9
+                },
+                {
+                    "metric": 0.2,
+                    "source": 2,
+                    "target": 8
+                }
+            ],
+            "name": "2",
+            "x": -105,
+            "y": -307.5
+        },
+        {
+            "edges": [
+                {
+                    "metric": 0.8,
+                    "source": 3,
+                    "target": 6
+                },
+                {
+                    "metric": 0.3,
+                    "source": 3,
+                    "target": 7
+                }
+            ],
+            "name": "3",
+            "x": 277.5,
+            "y": -258.75
+        },
+        {
+            "edges": [
+                {
+                    "metric": 0.7,
+                    "source": 4,
+                    "target": 9
+                }
+            ],
+            "name": "4",
+            "x": -240,
+            "y": -110
+        },
+        {
+            "edges": [
+                {
+                    "metric": 0.9,
+                    "source": 5,
+                    "target": 9
+                }
+            ],
+            "name": "5",
+            "x": -228.75,
+            "y": 252.5
+        },
+        {
+            "edges": [
+                {
+                    "metric": 0.1,
+                    "source": 6,
+                    "target": 7
+                }
+            ],
+            "name": "6",
+            "x": 380,
+            "y": 225
+        },
+        {
+            "edges": [
+            ],
+            "name": "7",
+            "x": -421.25,
+            "y": 222.5
+        },
+        {
+            "edges": [
+                {
+                    "metric": 0.3,
+                    "source": 8,
+                    "target": 1
+                }
+            ],
+            "name": "8",
+            "x": 247.5,
+            "y": 46.25
+        },
+        {
+            "edges": [
+            ],
+            "name": "9",
+            "x": 236.25,
+            "y": 266.25
+        }
+    ]
+}
