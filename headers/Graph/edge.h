@@ -20,6 +20,8 @@ public:
     enum { Type = UserType + 2 };
     int type() const override { return Type; }
 
+    void setColor(const QString &);
+
 protected:
     QRectF boundingRect() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
@@ -30,6 +32,8 @@ private:
     QPointF sourcePoint;
     QPointF destPoint;
     QString metric;
+
+    QString color {"blue"};
 };
 
 #endif // EDGE_H
