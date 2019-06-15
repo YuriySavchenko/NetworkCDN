@@ -55,6 +55,11 @@ const QString Edge::getMetric()
     return this->metric;
 }
 
+void Edge::setColor(const QString &value)
+{
+    color = value;
+}
+
 QRectF Edge::boundingRect() const
 {
     if (!source || !dest)
@@ -79,7 +84,7 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
         return;
 
     // Draw the line itself
-    painter->setPen(QPen(Qt::blue, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    painter->setPen(QPen(QColor(color), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter->drawLine(line);
 
     // Draw weight
