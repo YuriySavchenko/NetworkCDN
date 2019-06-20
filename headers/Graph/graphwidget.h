@@ -3,6 +3,9 @@
 
 #include <QGraphicsView>
 #include <QDebug>
+#include <QInputDialog>
+#include <QCoreApplication>
+#include <QTime>
 
 #include "../Parse/jsonwriter.h"
 #include "../Parse/jsonreader.h"
@@ -37,8 +40,8 @@ private:
     QGraphicsScene *scene;
     QVector<Node *> vectorNodes;
     QVector<Edge *> vectorEdges;
-    quint64 keyboardSequence = 0;
-    quint64 count = 1;
+    int keyboardSequence = 0;
+    int count;
 };
 
 #endif // GRAPHWIDGET_H
