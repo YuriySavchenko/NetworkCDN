@@ -64,3 +64,15 @@ void Matrix::setCol(const int &col)
 {
     this->col = col;
 }
+
+/* implementation of method for getting value from variable row */
+int Matrix::getRow()
+{
+    return this->row;
+}
+
+/* implementation of method for getting value from variable col */
+int Matrix::getCol()
+{
+    return this->col;
+}
