@@ -88,6 +88,8 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
 
                 for (int i=0; i < vectorEdges.size(); i++)
                     scene->addItem(vectorEdges[i]);
+
+                this->count = vectorNodes.size();
             }
 
             else {
@@ -98,30 +100,66 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
             break;
         // calculating delivery path if has been entered next key word
         case Qt::Key_C + Qt::Key_A + Qt::Key_L + Qt::Key_C:
-            cdn->setEdges(vectorEdges);
-            cdn->getMatrix().setRow(vectorNodes.size());
-            cdn->getMatrix().setCol(vectorNodes.size());
-            cdn->getMatrix().transformFrom(cdn->getEdges());
+            bool ok;
 
-            // final path of graph with the best metric for delivery
-            QVector<int> path = cdn->findPaths(0, 8);
+            QString text = QInputDialog::getText(
+                        this,
+                        tr("Source and Destonation nodes"),
+                        tr("Source and Destonation nodes: "),
+                        QLineEdit::Normal,
+                        "",
+                        &ok);
 
-            // looking for edge in vectorEdges by received path of nodes
-            for (int i=0; i < path.size()-1; i++) {
-                for (auto &edge : vectorEdges) {
-                    // if edge painted from lower node to greater node
-                    if (edge->sourceNode()->name == QString::number(path[i]+1) && edge->destNode()->name == QString::number(path[i+1]+1)) {
-                        edge->setColor("red");
-                        edge->update();
-                    }
+            QStringList nodesSrcDst = text.split(",");
 
-                    // if edge painted from greater node to lower node
-                    if (edge->sourceNode()->name == QString::number(path[i+1]+1) && edge->destNode()->name == QString::number(path[i]+1)) {
-                        edge->setColor("red");
-                        edge->update();
+            if (nodesSrcDst.size() == 2 && nodesSrcDst[0].toInt() && nodesSrcDst[1].toInt()) {
+                int srcNode = nodesSrcDst[0].toInt();
+                int dstNode = nodesSrcDst[1].toInt();
+
+                if ((srcNode > 0 && srcNode <= count) && (dstNode > 0 && dstNode <= count)) {
+                    cdn->setEdges(vectorEdges);
+                    cdn->getMatrix().setRow(vectorNodes.size());
+                    cdn->getMatrix().setCol(vectorNodes.size());
+                    cdn->getMatrix().transformFrom(cdn->getEdges());
+
+                    // final path of graph with the best metric for delivery
+                    QVector<int> path = cdn->findPaths(srcNode-1, dstNode-1);
+
+                    // looking for edge in vectorEdges by received path of nodes
+                    for (int i=0; i < path.size()-1; i++) {
+                        for (auto &edge : vectorEdges) {
+                            // if edge painted from lower node to greater node
+                            if (edge->sourceNode()->name == QString::number(path[i]+1) && edge->destNode()->name == QString::number(path[i+1]+1)) {
+                                edge->setColor("red");
+                                edge->update();
+
+                                QTime time;
+                                time.start();
+                                while (time.elapsed() != 1000) QCoreApplication::processEvents();
+                            }
+
+                            // if edge painted from greater node to lower node
+                            if (edge->sourceNode()->name == QString::number(path[i+1]+1) && edge->destNode()->name == QString::number(path[i]+1)) {
+                                edge->setColor("red");
+                                edge->update();
+
+                                QTime time;
+                                time.start();
+                                while (time.elapsed() != 1000) QCoreApplication::processEvents();
+                            }
+                        }
                     }
                 }
+
+                else {
+                    QMessageBox::warning(this, "Nodes Error", "Numbers of nodes don't can exceed count of nodes in Graph!");
+                }
             }
+
+            else {
+                QMessageBox::critical(this, "Input Error", "Please write only two digits of nodes through the ','!");
+            }
+
 
             keyboardSequence = 0;
             break;
