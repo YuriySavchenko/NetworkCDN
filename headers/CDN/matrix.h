@@ -37,6 +37,10 @@ public:
 public:
     void setRow(const int &);               //!< A \e method which allows setup value for \b row
     void setCol(const int &);               //!< A \e method which allows setup value for \b col
+
+public:
+    int getRow();                           //!< A \e method which allows give value of \b row
+    int getCol();                           //!< A \e method which allows give value of \b col
 };
 
 #endif // MATRIX_H
