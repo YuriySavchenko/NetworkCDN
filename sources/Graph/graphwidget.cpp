@@ -102,6 +102,27 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
             cdn->getMatrix().setRow(vectorNodes.size());
             cdn->getMatrix().setCol(vectorNodes.size());
             cdn->getMatrix().transformFrom(cdn->getEdges());
+
+            // final path of graph with the best metric for delivery
+            QVector<int> path = cdn->findPaths(0, 8);
+
+            // looking for edge in vectorEdges by received path of nodes
+            for (int i=0; i < path.size()-1; i++) {
+                for (auto &edge : vectorEdges) {
+                    // if edge painted from lower node to greater node
+                    if (edge->sourceNode()->name == QString::number(path[i]+1) && edge->destNode()->name == QString::number(path[i+1]+1)) {
+                        edge->setColor("red");
+                        edge->update();
+                    }
+
+                    // if edge painted from greater node to lower node
+                    if (edge->sourceNode()->name == QString::number(path[i+1]+1) && edge->destNode()->name == QString::number(path[i]+1)) {
+                        edge->setColor("red");
+                        edge->update();
+                    }
+                }
+            }
+
             keyboardSequence = 0;
             break;
     }
