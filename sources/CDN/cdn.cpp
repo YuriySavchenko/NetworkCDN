@@ -52,6 +52,8 @@ void CDN::addPath(const QVector<int> &path)
 /* implementation of method which allows find all neighbors for all nodes */
 QVector<int> CDN::findPaths(const int &src, const int &dst)
 {
+    paths.clear();
+
     // Mark all the vertices as not visited
     QVector<bool> visited(matrix.getRow(), false);
 
