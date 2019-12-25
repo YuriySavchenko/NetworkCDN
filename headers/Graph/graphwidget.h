@@ -4,6 +4,7 @@
 #include <QGraphicsView>
 #include <QDebug>
 #include <QInputDialog>
+#include <QFileDialog>
 #include <QCoreApplication>
 #include <QTime>
 
