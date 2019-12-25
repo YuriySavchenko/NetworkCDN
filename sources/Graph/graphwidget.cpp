@@ -48,40 +48,73 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
 
     switch (keyboardSequence) {
         // zomm In if keyboard sequence equal Key_Plus
-        case Qt::Key_Plus:
+        case Qt::Key_Plus: {
             zoomIn();
             keyboardSequence = 0;
             break;
+        }
         // zomm Out if keyboard sequence equal Key_Minus
-        case Qt::Key_Minus:
+        case Qt::Key_Minus: {
             zoomOut();
             keyboardSequence = 0;
             break;
+        }
         // deleting of keyboard sequence if has been pressed Key_BackSpace
-        case Qt::Key_Backspace:
+        case Qt::Key_Backspace: {
             keyboardSequence = 0;
             break;
+        }
         // clearing of main scene if has been entered next key word
-        case Qt::Key_C + Qt::Key_L + Qt::Key_E + Qt::Key_A + Qt::Key_R:
+        case Qt::Key_C + Qt::Key_L + Qt::Key_O + Qt::Key_S + Qt::Key_E: {
             this->vectorEdges.clear();
             this->vectorNodes.clear();
             scene->clear();
             keyboardSequence = 0;
             break;
+        }
+        // setting up of default color for edges
+        case Qt::Key_C + Qt::Key_L + Qt::Key_E + Qt::Key_A + Qt::Key_R: {
+            for (auto &edge : vectorEdges) {
+                edge->setColor("blue");
+                edge->update();
+            }
+
+            break;
+        }
         // mixing of nodes if has been entered next key word
-        case Qt::Key_S + Qt::Key_H + Qt::Key_U + Qt::Key_F + Qt::Key_F + Qt::Key_L + Qt::Key_E:
+        case Qt::Key_S + Qt::Key_H + Qt::Key_U + Qt::Key_F + Qt::Key_F + Qt::Key_L + Qt::Key_E: {
             shuffle();
             keyboardSequence = 0;
             break;
+        }
         // saving graph configuration if has been entered next key word
-        case Qt::Key_S + Qt::Key_A + Qt::Key_V + Qt::Key_E:
-            JsonWriter::writeToJson(vectorNodes, "config.json");
+        case Qt::Key_S + Qt::Key_A + Qt::Key_V + Qt::Key_E: {
+
+            QString fileName = QFileDialog::getOpenFileName(this, tr("Choose file for write graph"), "", tr("Files (*.json)"));
+
+            if (fileName.isEmpty()) {
+                QMessageBox::critical(nullptr, "Fail", "File has not been opened!");
+                keyboardSequence = 0;
+                return;
+            }
+
+            JsonWriter::writeToJson(vectorNodes, fileName);
             keyboardSequence = 0;
             break;
+        }
         // opening configuration file and read from it all information for future building of graph
-        case Qt::Key_O + Qt::Key_P + Qt::Key_E + Qt::Key_N:
+        case Qt::Key_O + Qt::Key_P + Qt::Key_E + Qt::Key_N: {
             if (vectorNodes.isEmpty() and vectorEdges.isEmpty()) {
-                JsonReader::readFromJson("config.json", vectorNodes, vectorEdges);
+
+                QString fileName = QFileDialog::getOpenFileName(this, tr("Choose graph file"), "", tr("Files (*.json)"));
+
+                if (fileName.isEmpty()) {
+                    QMessageBox::critical(nullptr, "Fail", "File has not been opened!");
+                    keyboardSequence = 0;
+                    return;
+                }
+
+                JsonReader::readFromJson(fileName, vectorNodes, vectorEdges);
 
                 for (int i=0; i < vectorNodes.size(); i++)
                     scene->addItem(vectorNodes[i]);
@@ -98,8 +131,9 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
 
             keyboardSequence = 0;
             break;
+        }
         // calculating delivery path if has been entered next key word
-        case Qt::Key_C + Qt::Key_A + Qt::Key_L + Qt::Key_C:
+        case Qt::Key_C + Qt::Key_A + Qt::Key_L + Qt::Key_C: {
             bool ok;
 
             QString text = QInputDialog::getText(
@@ -152,17 +186,18 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
                 }
 
                 else {
-                    QMessageBox::warning(this, "Nodes Error", "Numbers of nodes don't can exceed count of nodes in Graph!");
+                    QMessageBox::warning(this, "Nodes Error", "Numbers of nodes cannot exceed count of nodes in Graph!");
                 }
             }
 
             else {
-                QMessageBox::critical(this, "Input Error", "Please write only two digits of nodes through the ','!");
+                QMessageBox::critical(this, "Input Error", "Write only two numbers!");
             }
 
 
             keyboardSequence = 0;
             break;
+        }
     }
 }
 
