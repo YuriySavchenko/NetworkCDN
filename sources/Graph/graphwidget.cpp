@@ -89,7 +89,6 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
         }
         // saving graph configuration if has been entered next key word
         case Qt::Key_S + Qt::Key_A + Qt::Key_V + Qt::Key_E: {
-
             QString fileName = QFileDialog::getOpenFileName(this, tr("Choose file for write graph"), "", tr("Files (*.json)"));
 
             if (fileName.isEmpty()) {
