@@ -78,7 +78,7 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
                 edge->setColor("blue");
                 edge->update();
             }
-
+            keyboardSequence = 0;
             break;
         }
         // mixing of nodes if has been entered next key word
