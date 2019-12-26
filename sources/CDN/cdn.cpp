@@ -31,6 +31,11 @@ Matrix &CDN::getMatrix()
     return this->matrix;
 }
 
+/* implementation of function which allows get table with paths */
+ListOfTraversedPaths CDN::getTable() {
+    return this->table;
+}
+
 /* implementation of method for saving vector of edges */
 void CDN::setEdges(const QVector<Edge *> &edges)
 {
@@ -52,15 +57,35 @@ void CDN::addPath(const QVector<int> &path)
 /* implementation of method which allows find all neighbors for all nodes */
 QVector<int> CDN::findPaths(const int &src, const int &dst)
 {
+    qDebug() << "-----------------------------------------------------------------";
+    qDebug() << "[!] Start of searching the optimal path [!]";
+    qDebug() << "-----------------------------------------------------------------";
+
+    QElapsedTimer timerForFound;
+    qint64 nanoSecTimerForFound;
+    timerForFound.start();
+
     // If the source node equals to first node from anyone path that has been found
     // and the destonation node equal to the last node from anyone path that has been found earlier
     // we return matching path from table with found paths
     for (auto &traversed : table) {
         if (src == traversed.first() && dst == traversed.last()) {
+            nanoSecTimerForFound = timerForFound.nsecsElapsed();
+
+            qDebug() << "-----------------------------------------------------------------";
+            qDebug() << "[+] The whole path has been found in the table [+]";
+            qDebug() << "[+] The time of searching in the table: " << nanoSecTimerForFound/pow(10,9) << " [+]";
+            qDebug() << "-----------------------------------------------------------------";
             return traversed;
         }
 
         else if (src == traversed.last() && dst == traversed.first()) {
+            nanoSecTimerForFound = timerForFound.nsecsElapsed();
+
+            qDebug() << "-----------------------------------------------------------------";
+            qDebug() << "[+] The whole path has been found in the table [+]";
+            qDebug() << "[+] The time of searching in the table: " << nanoSecTimerForFound/pow(10,9) << " [+]";
+            qDebug() << "-----------------------------------------------------------------";
             return traversed;
         }
     }
@@ -75,6 +100,14 @@ QVector<int> CDN::findPaths(const int &src, const int &dst)
                 for (int j=0; j < i+1; j++)
                     subPath.append(traversed[j]);
 
+                nanoSecTimerForFound = timerForFound.nsecsElapsed();
+
+                qDebug() << "-----------------------------------------------------------------";
+                qDebug() << "[+] The part of path has been found in the table [+]";
+                qDebug() << "[+] src ---> dst  == " << src+1 << "--->" << dst+1 << " [+]";
+                qDebug() << "[+] The time of searching in the table: " << nanoSecTimerForFound/pow(10,9) << " [+]";
+                qDebug() << "-----------------------------------------------------------------";
+
                 return subPath;
             }
 
@@ -82,6 +115,14 @@ QVector<int> CDN::findPaths(const int &src, const int &dst)
                 QVector<int> subPath;
                 for (int j=i; j < traversed.size(); j++)
                     subPath.append(traversed[j]);
+
+                nanoSecTimerForFound = timerForFound.nsecsElapsed();
+
+                qDebug() << "-----------------------------------------------------------------";
+                qDebug() << "[+] The part of path has been found in the table [+]";
+                qDebug() << "[+] src ---> dst  == " << src+1 << "--->" << dst+1 << " [+]";
+                qDebug() << "[+] The time of searching in the table: " << nanoSecTimerForFound/pow(10,9) << " [+]";
+                qDebug() << "-----------------------------------------------------------------";
 
                 return subPath;
             }
@@ -91,6 +132,14 @@ QVector<int> CDN::findPaths(const int &src, const int &dst)
                 for (int j=0; j < i+1; j++)
                     subPath.append(traversed[j]);
 
+                nanoSecTimerForFound = timerForFound.nsecsElapsed();
+
+                qDebug() << "-----------------------------------------------------------------";
+                qDebug() << "[+] The part of path has been found in the table [+]";
+                qDebug() << "[+] src ---> dst  == " << src+1 << "--->" << dst+1 << " [+]";
+                qDebug() << "[+] The time of searching in the table: " << nanoSecTimerForFound/pow(10,9) << " [+]";
+                qDebug() << "-----------------------------------------------------------------";
+
                 return subPath;
             }
 
@@ -99,10 +148,22 @@ QVector<int> CDN::findPaths(const int &src, const int &dst)
                 for(int j=i; j < traversed.size(); j++)
                     subPath.append(traversed[j]);
 
+                nanoSecTimerForFound = timerForFound.nsecsElapsed();
+
+                qDebug() << "-----------------------------------------------------------------";
+                qDebug() << "[+] The part of path has been found in the table [+]";
+                qDebug() << "[+] src ---> dst  == " << src+1 << "--->" << dst+1 << " [+]";
+                qDebug() << "[+] The time of searching in the table: " << nanoSecTimerForFound/pow(10,9) << " [+]";
+                qDebug() << "-----------------------------------------------------------------";
+
                 return subPath;
             }
         }
     }
+
+    QElapsedTimer timerForNewPath;
+    qint64 nanoSecTimerNewPath;
+    timerForNewPath.start();
 
     paths.clear();
 
@@ -161,6 +222,15 @@ QVector<int> CDN::findPaths(const int &src, const int &dst)
     for (int i=0; i < paths.size(); i++) {
         if (matchPathMetric[i] == min) {
             table.append(paths[i]);
+
+            nanoSecTimerNewPath = timerForNewPath.nsecsElapsed();
+
+            qDebug() << "-----------------------------------------------------------------";
+            qDebug() << "[+] The new path has been found: [!]";
+            qDebug() << paths[i];
+            qDebug() << "[+] The time of searchingin the table: " << nanoSecTimerNewPath/pow(10,9) << " [+]";
+            qDebug() << "-----------------------------------------------------------------";
+
             return paths[i];
         }
     }
