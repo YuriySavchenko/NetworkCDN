@@ -64,12 +64,17 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
             keyboardSequence = 0;
             break;
         }
+        // stopping of execution
+        case Qt::Key_E + Qt::Key_X + Qt::Key_I + Qt::Key_T: {
+            exit(0);
+        }
         // clearing of main scene if has been entered next key word
         case Qt::Key_C + Qt::Key_L + Qt::Key_O + Qt::Key_S + Qt::Key_E: {
             this->vectorEdges.clear();
             this->vectorNodes.clear();
             scene->clear();
             keyboardSequence = 0;
+            isGraphLoaded = false;
             break;
         }
         // setting up of default color for edges
@@ -89,15 +94,20 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
         }
         // saving graph configuration if has been entered next key word
         case Qt::Key_S + Qt::Key_A + Qt::Key_V + Qt::Key_E: {
-            QString fileName = QFileDialog::getOpenFileName(this, tr("Choose file for write graph"), "", tr("Files (*.json)"));
+            if (isGraphLoaded) {
+                QString fileName = QFileDialog::getOpenFileName(this, tr("Choose file for write graph"), "", tr("Files (*.json)"));
 
-            if (fileName.isEmpty()) {
-                QMessageBox::critical(nullptr, "Fail", "File has not been opened!");
-                keyboardSequence = 0;
-                return;
+                if (fileName.isEmpty()) {
+                    QMessageBox::critical(nullptr, "Fail", "File has not been opened!");
+                    keyboardSequence = 0;
+                    return;
+                }
+
+                JsonWriter::writeToJson(vectorNodes, fileName);
             }
 
-            JsonWriter::writeToJson(vectorNodes, fileName);
+            QMessageBox::critical(nullptr, "Fail", tr("File has not been loaded!"));
+
             keyboardSequence = 0;
             break;
         }
@@ -122,6 +132,8 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
                     scene->addItem(vectorEdges[i]);
 
                 this->count = vectorNodes.size();
+
+                isGraphLoaded = true;
             }
 
             else {
@@ -133,65 +145,77 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
         }
         // calculating delivery path if has been entered next key word
         case Qt::Key_C + Qt::Key_A + Qt::Key_L + Qt::Key_C: {
-            bool ok;
+            if (isGraphLoaded) {
+                bool ok;
 
-            QString text = QInputDialog::getText(
-                        this,
-                        tr("Source and Destonation nodes"),
-                        tr("Source and Destonation nodes: "),
-                        QLineEdit::Normal,
-                        "",
-                        &ok);
+                QString text = QInputDialog::getText(
+                            this,
+                            tr("Source and Destonation nodes"),
+                            tr("Source and Destonation nodes: "),
+                            QLineEdit::Normal,
+                            "",
+                            &ok);
 
-            QStringList nodesSrcDst = text.split(",");
+                QStringList nodesSrcDst = text.split(",");
 
-            if (nodesSrcDst.size() == 2 && nodesSrcDst[0].toInt() && nodesSrcDst[1].toInt()) {
-                int srcNode = nodesSrcDst[0].toInt();
-                int dstNode = nodesSrcDst[1].toInt();
+                if (nodesSrcDst.size() == 2 && nodesSrcDst[0].toInt() && nodesSrcDst[1].toInt()) {
+                    int srcNode = nodesSrcDst[0].toInt();
+                    int dstNode = nodesSrcDst[1].toInt();
 
-                if ((srcNode > 0 && srcNode <= count) && (dstNode > 0 && dstNode <= count)) {
-                    cdn->setEdges(vectorEdges);
-                    cdn->getMatrix().setRow(vectorNodes.size());
-                    cdn->getMatrix().setCol(vectorNodes.size());
-                    cdn->getMatrix().transformFrom(cdn->getEdges());
-
-                    // final path of graph with the best metric for delivery
-                    QVector<int> path = cdn->findPaths(srcNode-1, dstNode-1);
-
-                    // looking for edge in vectorEdges by received path of nodes
-                    for (int i=0; i < path.size()-1; i++) {
+                    if ((srcNode > 0 && srcNode <= count) && (dstNode > 0 && dstNode <= count)) {
+                        // clearing of found paths on the graph
                         for (auto &edge : vectorEdges) {
-                            // if edge painted from lower node to greater node
-                            if (edge->sourceNode()->name == QString::number(path[i]+1) && edge->destNode()->name == QString::number(path[i+1]+1)) {
-                                edge->setColor("red");
-                                edge->update();
+                            edge->setColor("blue");
+                            edge->update();
+                        }
 
-                                QTime time;
-                                time.start();
-                                while (time.elapsed() != 1000) QCoreApplication::processEvents();
-                            }
+                        cdn->setEdges(vectorEdges);
+                        cdn->getMatrix().setRow(vectorNodes.size());
+                        cdn->getMatrix().setCol(vectorNodes.size());
+                        cdn->getMatrix().transformFrom(cdn->getEdges());
 
-                            // if edge painted from greater node to lower node
-                            if (edge->sourceNode()->name == QString::number(path[i+1]+1) && edge->destNode()->name == QString::number(path[i]+1)) {
-                                edge->setColor("red");
-                                edge->update();
+                        // final path of graph with the best metric for delivery
+                        QVector<int> path = cdn->findPaths(srcNode-1, dstNode-1);
 
-                                QTime time;
-                                time.start();
-                                while (time.elapsed() != 1000) QCoreApplication::processEvents();
+                        // looking for edge in vectorEdges by received path of nodes
+                        for (int i=0; i < path.size()-1; i++) {
+                            for (auto &edge : vectorEdges) {
+                                // if edge painted from lower node to greater node
+                                if (edge->sourceNode()->name == QString::number(path[i]+1) && edge->destNode()->name == QString::number(path[i+1]+1)) {
+                                    edge->setColor("red");
+                                    edge->update();
+
+                                    QTime time;
+                                    time.start();
+                                    while (time.elapsed() != 1000) QCoreApplication::processEvents();
+                                }
+
+                                // if edge painted from greater node to lower node
+                                if (edge->sourceNode()->name == QString::number(path[i+1]+1) && edge->destNode()->name == QString::number(path[i]+1)) {
+                                    edge->setColor("red");
+                                    edge->update();
+
+                                    QTime time;
+                                    time.start();
+                                    while (time.elapsed() != 1000) QCoreApplication::processEvents();
+                                }
                             }
                         }
+                        keyboardSequence = 0;
+                        break;
+                    }
+
+                    else {
+                        QMessageBox::warning(this, "Nodes Error", "Numbers of nodes cannot exceed count of nodes in Graph!");
                     }
                 }
 
                 else {
-                    QMessageBox::warning(this, "Nodes Error", "Numbers of nodes cannot exceed count of nodes in Graph!");
+                    QMessageBox::critical(this, "Input Error", "Write only two numbers!");
                 }
             }
 
-            else {
-                QMessageBox::critical(this, "Input Error", "Write only two numbers!");
-            }
+            QMessageBox::critical(this, "Opening Fail", "File has not been opened!");
 
 
             keyboardSequence = 0;
