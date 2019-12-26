@@ -43,6 +43,7 @@ private:
     QVector<Edge *> vectorEdges;
     int keyboardSequence = 0;
     int count;
+    bool isGraphLoaded;
 };
 
 #endif // GRAPHWIDGET_H
