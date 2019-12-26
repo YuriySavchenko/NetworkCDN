@@ -79,10 +79,13 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
         }
         // setting up of default color for edges
         case Qt::Key_C + Qt::Key_L + Qt::Key_E + Qt::Key_A + Qt::Key_R: {
-            for (auto &edge : vectorEdges) {
-                edge->setColor("blue");
-                edge->update();
+            if (isGraphLoaded) {
+                for (auto &edge : vectorEdges) {
+                    edge->setColor("blue");
+                    edge->update();
+                }
             }
+
             keyboardSequence = 0;
             break;
         }
