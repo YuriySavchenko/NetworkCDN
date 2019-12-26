@@ -4,6 +4,9 @@
 #include <iostream>
 #include <QVector>
 #include <QQueue>
+#include <QDebug>
+#include <QElapsedTimer>
+#include <cmath>
 
 #include "../../headers/Graph/edge.h"
 #include "../../headers/CDN/matrix.h"
@@ -33,6 +36,7 @@ private:
 public:
     QVector<Edge *>& getEdges();            //!< A \e function for getting \b edges
     Matrix& getMatrix();                    //!< A \e function for getting \b matrix
+    ListOfTraversedPaths getTable();        //!< A \e function for getting \b table
 
 public:
     void setEdges(const QVector<Edge *> &);     //!< A \e method for saving \a vector of \b edges
