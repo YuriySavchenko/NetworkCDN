@@ -190,7 +190,7 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
 
                                     QTime time;
                                     time.start();
-                                    while (time.elapsed() != 1000) QCoreApplication::processEvents();
+                                    while (time.elapsed() != 500) QCoreApplication::processEvents();
                                 }
 
                                 // if edge painted from greater node to lower node
@@ -200,21 +200,32 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
 
                                     QTime time;
                                     time.start();
-                                    while (time.elapsed() != 1000) QCoreApplication::processEvents();
+                                    while (time.elapsed() != 500) QCoreApplication::processEvents();
                                 }
                             }
                         }
+
+                        qDebug() << "-----------------------------------------------------------------";
+                        qDebug() << "[!] The table with previously marked paths: [!]";
+
+                        for (int i=0; i < cdn->getTable().size(); i++)
+                            qDebug() << cdn->getTable()[i];
+
+                        qDebug() << "-----------------------------------------------------------------";
+
                         keyboardSequence = 0;
                         break;
                     }
 
                     else {
                         QMessageBox::warning(this, "Nodes Error", "Numbers of nodes cannot exceed count of nodes in Graph!");
+                        return;
                     }
                 }
 
                 else {
                     QMessageBox::critical(this, "Input Error", "Write only two numbers!");
+                    return;
                 }
             }
 
