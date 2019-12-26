@@ -52,6 +52,58 @@ void CDN::addPath(const QVector<int> &path)
 /* implementation of method which allows find all neighbors for all nodes */
 QVector<int> CDN::findPaths(const int &src, const int &dst)
 {
+    // If the source node equals to first node from anyone path that has been found
+    // and the destonation node equal to the last node from anyone path that has been found earlier
+    // we return matching path from table with found paths
+    for (auto &traversed : table) {
+        if (src == traversed.first() && dst == traversed.last()) {
+            return traversed;
+        }
+
+        else if (src == traversed.last() && dst == traversed.first()) {
+            return traversed;
+        }
+    }
+
+    // The loop that allows to check availability of sub path in the table with found paths
+    // If we found the necessary path so we need to highlight the matching path from table
+    // and return the necessary highlighted part
+    for (auto &traversed : table) {
+        for (int i=0; i < traversed.size(); i++) {
+            if (src == traversed.first() && dst == traversed[i]) {
+                QVector<int> subPath;
+                for (int j=0; j < i+1; j++)
+                    subPath.append(traversed[j]);
+
+                return subPath;
+            }
+
+            if (src == traversed.last() && dst == traversed[i]) {
+                QVector<int> subPath;
+                for (int j=i; j < traversed.size(); j++)
+                    subPath.append(traversed[j]);
+
+                return subPath;
+            }
+
+            if (dst == traversed.first() && src == traversed[i]) {
+                QVector<int> subPath;
+                for (int j=0; j < i+1; j++)
+                    subPath.append(traversed[j]);
+
+                return subPath;
+            }
+
+            if (dst == traversed.last() && src == traversed[i]) {
+                QVector<int> subPath;
+                for(int j=i; j < traversed.size(); j++)
+                    subPath.append(traversed[j]);
+
+                return subPath;
+            }
+        }
+    }
+
     paths.clear();
 
     // Mark all the vertices as not visited
@@ -76,7 +128,7 @@ QVector<int> CDN::findPaths(const int &src, const int &dst)
         }
     }
 
-    // Call the recursive helper function to print all paths
+    // Call the recursive helper function to find all paths
     findPathsUtil(src, dst, neighborsNodes, visited, path, path_index);
 
     // Map for saving all paths and them metric
@@ -106,9 +158,12 @@ QVector<int> CDN::findPaths(const int &src, const int &dst)
         if (matchPathMetric[i] < min)
             min = matchPathMetric[i];
 
-    for (int i=0; i < paths.size(); i++)
-        if (matchPathMetric[i] == min)
+    for (int i=0; i < paths.size(); i++) {
+        if (matchPathMetric[i] == min) {
+            table.append(paths[i]);
             return paths[i];
+        }
+    }
 
     return QVector<int> ();
 }
