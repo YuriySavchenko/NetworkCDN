@@ -8,6 +8,8 @@
 #include "../../headers/Graph/edge.h"
 #include "../../headers/CDN/matrix.h"
 
+using ListOfTraversedPaths = QVector<QVector<int>>;
+
 //!
 //! \brief The CDN class\n
 //! \b CDN - class which presents \b Content \b Delivery \b Network \n
@@ -25,6 +27,8 @@ private:
     Matrix matrix;                  //!< A \e variable \b matrix for saving \b hosts
     QVector<Edge *> edges;          //!< A \e variable for saving \a vector of \b edges
     QVector<QVector<int>> paths;    //!< A \e variable for saving all \a paths of \b graph between \a source node and \a dest node
+
+    ListOfTraversedPaths table;     //!< A \e variable for saving all founded \a paths on the \b graph
 
 public:
     QVector<Edge *>& getEdges();            //!< A \e function for getting \b edges
