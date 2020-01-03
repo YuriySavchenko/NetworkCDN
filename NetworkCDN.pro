@@ -7,7 +7,8 @@ HEADERS += \
         headers/Parse/jsonwriter.h \
         headers/Parse/jsonreader.h \
         headers/CDN/cdn.h \
-        headers/CDN/matrix.h
+        headers/CDN/matrix.h \
+        headers/Info/instructions.h
 
 SOURCES += \
         sources/Graph/edge.cpp \
@@ -17,4 +18,5 @@ SOURCES += \
         sources/Parse/jsonwriter.cpp \
         sources/Parse/jsonreader.cpp \
         sources/CDN/cdn.cpp \
-        sources/CDN/matrix.cpp
+        sources/CDN/matrix.cpp \
+        sources/Info/instructions.cpp
