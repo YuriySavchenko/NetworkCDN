@@ -3,6 +3,8 @@
 
 #include <QGraphicsView>
 #include <QDebug>
+#include <QFont>
+#include <QLabel>
 #include <QInputDialog>
 #include <QFileDialog>
 #include <QCoreApplication>
@@ -11,6 +13,7 @@
 #include "../Parse/jsonwriter.h"
 #include "../Parse/jsonreader.h"
 #include "../CDN/cdn.h"
+#include "../Info/instructions.h"
 
 class Node;
 class Edge;
@@ -38,9 +41,12 @@ protected:
 
 private:
     CDN *cdn;
+    Instructions *info;
     QGraphicsScene *scene;
+
     QVector<Node *> vectorNodes;
     QVector<Edge *> vectorEdges;
+
     int keyboardSequence = 0;
     int count;
     bool isGraphLoaded;
