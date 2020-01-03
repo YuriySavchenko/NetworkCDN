@@ -11,6 +11,7 @@ GraphWidget::GraphWidget(QWidget *parent)
     : QGraphicsView(parent)
 {
     this->scene = new QGraphicsScene(this);
+    this->info = new Instructions();
     scene->setItemIndexMethod(QGraphicsScene::NoIndex);
     scene->setSceneRect(-200, -200, 400, 400);
     setScene(scene);
@@ -21,6 +22,9 @@ GraphWidget::GraphWidget(QWidget *parent)
     scale(qreal(0.8), qreal(0.8));
     setMinimumSize(800, 600);
     setWindowTitle(tr("Content Delivery Network"));
+
+    // messagebox for demonstration instructions
+    QMessageBox::information(nullptr, "USEFUL INFO", "OVERVIEW OF RULES IS AVAILABLE BY ENTERING THE WORD: HELP");
 
     // CDN initialization
     this->cdn = new CDN();
@@ -37,6 +41,7 @@ GraphWidget::~GraphWidget()
         delete node;
 
     scene->deleteLater();
+    info->deleteLater();
 }
 
 void GraphWidget::keyPressEvent(QKeyEvent *event)
@@ -56,6 +61,12 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
         // zomm Out if keyboard sequence equal Key_Minus
         case Qt::Key_Minus: {
             zoomOut();
+            keyboardSequence = 0;
+            break;
+        }
+        // scene which allows to see instructions of using app
+        case Qt::Key_H + Qt::Key_E + Qt::Key_L + Qt::Key_P: {
+            info->showInstructions();
             keyboardSequence = 0;
             break;
         }
