@@ -92,7 +92,7 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
         case Qt::Key_C + Qt::Key_L + Qt::Key_E + Qt::Key_A + Qt::Key_R: {
             if (isGraphLoaded) {
                 for (auto &edge : vectorEdges) {
-                    edge->setColor("black");
+                    edge->setColor("blue");
                     edge->update();
                 }
             }
@@ -179,7 +179,7 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
                     if ((srcNode > 0 && srcNode <= count) && (dstNode > 0 && dstNode <= count)) {
                         // clearing of found paths on the graph
                         for (auto &edge : vectorEdges) {
-                            edge->setColor("black");
+                            edge->setColor("blue");
                             edge->update();
                         }
 
