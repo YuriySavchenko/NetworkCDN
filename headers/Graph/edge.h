@@ -33,7 +33,7 @@ private:
     QPointF destPoint;
     QString metric;
 
-    QString color {"blue"};
+    QString color {"black"};
 };
 
 #endif // EDGE_H
