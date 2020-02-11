@@ -228,7 +228,7 @@ QVector<int> CDN::findPaths(const int &src, const int &dst)
             qDebug() << "-----------------------------------------------------------------";
             qDebug() << "[+] The new path has been found: [!]";
             qDebug() << paths[i];
-            qDebug() << "[+] The time of searchingin the table: " << nanoSecTimerNewPath/pow(10,9) << " [+]";
+            qDebug() << "[+] The time of searching in the table: " << nanoSecTimerNewPath/pow(10,9) << " [+]";
             qDebug() << "-----------------------------------------------------------------";
 
             return paths[i];
