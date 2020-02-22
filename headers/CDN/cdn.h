@@ -14,10 +14,10 @@
 using ListOfTraversedPaths = QVector<QVector<int>>;
 
 //!
-//! \brief The CDN class\n
+//! \brief The CDN class \n
 //! \b CDN - class which presents \b Content \b Delivery \b Network \n
-//! \b CDN allows save \b matrix of \b hosts and also gives access
-//! calculate the shortest \e path of delivery \e packages\n
+//! \b CDN allows to save \b matrix of \b hosts and also gives access
+//! calculate the shortest \e path of delivery \e packages \n
 //!
 class CDN
 {
