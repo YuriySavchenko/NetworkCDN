@@ -1,4 +1,4 @@
-QT += widgets
+QT += widgets printsupport
 
 HEADERS += \
         headers/Graph/edge.h \
@@ -8,7 +8,8 @@ HEADERS += \
         headers/Parse/jsonreader.h \
         headers/CDN/cdn.h \
         headers/CDN/matrix.h \
-        headers/Info/instructions.h
+        headers/Info/instructions.h \
+        headers/QCustomPlot/qcustomplot.h
 
 SOURCES += \
         sources/Graph/edge.cpp \
@@ -19,4 +20,5 @@ SOURCES += \
         sources/Parse/jsonreader.cpp \
         sources/CDN/cdn.cpp \
         sources/CDN/matrix.cpp \
-        sources/Info/instructions.cpp
+        sources/Info/instructions.cpp \
+        sources/QCustomPlot/qcustomplot.cpp
