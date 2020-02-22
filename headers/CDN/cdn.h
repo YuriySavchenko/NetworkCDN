@@ -22,31 +22,33 @@ using ListOfTraversedPaths = QVector<QVector<int>>;
 class CDN
 {
 public:
-    CDN();                          //!< A \e constructor
-    CDN(const QVector<Edge *> &);   //!< A \e particular constructor with parameter list of \b edges
-    ~CDN();                         //!< A \e destructor
+    CDN() = default;                            //!< A \e constructor
+    ~CDN() = default;                           //!< A \e destructor
 
 private:
-    Matrix matrix;                  //!< A \e variable \b matrix for saving \b hosts
-    QVector<Edge *> edges;          //!< A \e variable for saving \a vector of \b edges
-    QVector<QVector<int>> paths;    //!< A \e variable for saving all \a paths of \b graph between \a source node and \a dest node
+    Matrix matrix;                                      //!< A \e variable \b matrix for saving \b hosts
 
-    ListOfTraversedPaths table;     //!< A \e variable for saving all founded \a paths on the \b graph
+    QVector<QVector<int>> paths;                        //!< A \e variable for saving all \a paths of \b graph between \a source node and \a dest node
+    QVector<int> lastFoundPath;                         //!< A \e variable for saving the last found \b path
+    QVector<int> metricsOfLastFoundPath;                //!< A \e variable for saving \e list of \b metrics for the last found \b path
 
-public:
-    QVector<Edge *>& getEdges();            //!< A \e function for getting \b edges
-    Matrix& getMatrix();                    //!< A \e function for getting \b matrix
-    ListOfTraversedPaths getTable();        //!< A \e function for getting \b table
+    ListOfTraversedPaths table;                         //!< A \e variable for saving all founded \a paths on the \b graph
 
 public:
-    void setEdges(const QVector<Edge *> &);     //!< A \e method for saving \a vector of \b edges
+    Matrix& getMatrix();                                //!< A \e function for getting \b matrix
+    ListOfTraversedPaths getTable();                    //!< A \e function for getting \b table
+
+    const QVector<int> & getLastFoundPath();            //!< A \e function for getting the last found \b path
+    const QVector<int> & getMetricsOfLastFoundPath();   //!< A \e function for getting \b metrics of the last found \b path
+
+public:
     void setMatrix(const Matrix &);             //!< A \e method for saving \b matrix
 
 public:
     void addPath(const QVector<int> &path);                     //!< A \e method for saving one \a path of \b graph
     QVector<int> findPaths(const int &src, const int &dst);     //!< A \e method for searching neighbors \a nodes in \b graph
 
-public:
+private:
     //!
     //! \brief findPathsUtil
     //! \param src
