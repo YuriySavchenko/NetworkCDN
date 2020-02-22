@@ -183,10 +183,9 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
                             edge->update();
                         }
 
-                        cdn->setEdges(vectorEdges);
                         cdn->getMatrix().setRow(vectorNodes.size());
                         cdn->getMatrix().setCol(vectorNodes.size());
-                        cdn->getMatrix().transformFrom(cdn->getEdges());
+                        cdn->getMatrix().transformFrom(vectorEdges);
 
                         // final path of graph with the best metric for delivery
                         QVector<int> path = cdn->findPaths(srcNode-1, dstNode-1);
@@ -230,12 +229,14 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
 
                     else {
                         QMessageBox::warning(this, "Nodes Error", "Numbers of nodes cannot exceed count of nodes in Graph!");
+                        keyboardSequence = 0;
                         return;
                     }
                 }
 
                 else {
                     QMessageBox::critical(this, "Input Error", "Write only two numbers!");
+                    keyboardSequence = 0;
                     return;
                 }
             }
