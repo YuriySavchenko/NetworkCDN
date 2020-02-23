@@ -1,14 +1,27 @@
 #include "../../headers/CDN/cdn.h"
 
-/* implementation of function which allows get matrix */
+/* implementation of function which allows to get the matrix */
 Matrix &CDN::getMatrix()
 {
     return this->matrix;
 }
 
-/* implementation of function which allows get table with paths */
-ListOfTraversedPaths CDN::getTable() {
+/* implementation of function which allows to get the table with paths */
+ListOfTraversedPaths CDN::getTable()
+{
     return this->table;
+}
+
+/* implementation of the function which allows to get the last found path */
+const QVector<int> & CDN::getLastFoundPath()
+{
+    return this->lastFoundPath;
+}
+
+/* implementation of the function which allows to get the metrics of the last found path */
+const QVector<double> & CDN::getMetricsOfLastFoundPath()
+{
+    return this->metricsOfLastFoundPath;
 }
 
 /* implementation of method for saving matrix */
@@ -23,7 +36,7 @@ void CDN::addPath(const QVector<int> &path)
     paths.push_back(path);
 }
 
-/* implementation of method which allows find all neighbors for all nodes */
+/* implementation of method which allows to find all neighbors for all nodes */
 QVector<int> CDN::findPaths(const int &src, const int &dst)
 {
     qDebug() << "-----------------------------------------------------------------";
@@ -45,6 +58,10 @@ QVector<int> CDN::findPaths(const int &src, const int &dst)
             qDebug() << "[+] The whole path has been found in the table [+]";
             qDebug() << "[+] The time of searching in the table: " << nanoSecTimerForFound/pow(10,9) << " [+]";
             qDebug() << "-----------------------------------------------------------------";
+
+            // saving path as last found path
+            this->lastFoundPath = traversed;
+
             return traversed;
         }
 
@@ -55,6 +72,10 @@ QVector<int> CDN::findPaths(const int &src, const int &dst)
             qDebug() << "[+] The whole path has been found in the table [+]";
             qDebug() << "[+] The time of searching in the table: " << nanoSecTimerForFound/pow(10,9) << " [+]";
             qDebug() << "-----------------------------------------------------------------";
+
+            // saving path as last found path
+            this->lastFoundPath = traversed;
+
             return traversed;
         }
     }
@@ -77,6 +98,9 @@ QVector<int> CDN::findPaths(const int &src, const int &dst)
                 qDebug() << "[+] The time of searching in the table: " << nanoSecTimerForFound/pow(10,9) << " [+]";
                 qDebug() << "-----------------------------------------------------------------";
 
+                // saving path as last found path
+                this->lastFoundPath = subPath;
+
                 return subPath;
             }
 
@@ -92,6 +116,9 @@ QVector<int> CDN::findPaths(const int &src, const int &dst)
                 qDebug() << "[+] src ---> dst  == " << src+1 << "--->" << dst+1 << " [+]";
                 qDebug() << "[+] The time of searching in the table: " << nanoSecTimerForFound/pow(10,9) << " [+]";
                 qDebug() << "-----------------------------------------------------------------";
+
+                // saving path as last found path
+                this->lastFoundPath = subPath;
 
                 return subPath;
             }
@@ -109,6 +136,9 @@ QVector<int> CDN::findPaths(const int &src, const int &dst)
                 qDebug() << "[+] The time of searching in the table: " << nanoSecTimerForFound/pow(10,9) << " [+]";
                 qDebug() << "-----------------------------------------------------------------";
 
+                // saving path as last found path
+                this->lastFoundPath = subPath;
+
                 return subPath;
             }
 
@@ -125,6 +155,9 @@ QVector<int> CDN::findPaths(const int &src, const int &dst)
                 qDebug() << "[+] The time of searching in the table: " << nanoSecTimerForFound/pow(10,9) << " [+]";
                 qDebug() << "-----------------------------------------------------------------";
 
+                // saving path as last found path
+                this->lastFoundPath = subPath;
+
                 return subPath;
             }
         }
@@ -137,20 +170,20 @@ QVector<int> CDN::findPaths(const int &src, const int &dst)
     paths.clear();
 
     // Mark all the vertices as not visited
-    QVector<bool> visited(matrix.getRow(), false);
+    QVector<bool> visited(matrix.getRowsCount(), false);
 
     // Create an array to store paths
-    QVector<int> path(matrix.getRow());
+    QVector<int> path(matrix.getRowsCount());
     int path_index = 0;
 
     // Create an map which stores a lists of neighbors nodes
     QMap<int, QVector<int>> neighborsNodes;
 
-    for (int i=0; i < matrix.getRow(); i++)
+    for (int i=0; i < matrix.getRowsCount(); i++)
         neighborsNodes[i] = QVector<int> ();
 
-    for (int i=0; i < matrix.getRow(); i++) {
-        for (int j=0; j < matrix.getCol(); j++) {
+    for (int i=0; i < matrix.getRowsCount(); i++) {
+        for (int j=0; j < matrix.getColsCount(); j++) {
             if (matrix.at(i, j) > 0) {
                 neighborsNodes[i].append(j);
                 neighborsNodes[j].append(i);
@@ -200,6 +233,9 @@ QVector<int> CDN::findPaths(const int &src, const int &dst)
             qDebug() << "[+] The time of searching in the table: " << nanoSecTimerNewPath/pow(10,9) << " [+]";
             qDebug() << "-----------------------------------------------------------------";
 
+            // saving path as last found path
+            this->lastFoundPath = paths[i];
+
             return paths[i];
         }
     }
@@ -207,7 +243,7 @@ QVector<int> CDN::findPaths(const int &src, const int &dst)
     return QVector<int> ();
 }
 
-/* implementation of method which looking for all paths of graph between source node and destonation node */
+/* implementation of method which is looking for all paths in graph between source node and destonation node */
 void CDN::findPathsUtil(const int &src, const int &dst, QMap<int, QVector<int>> map, QVector<bool> &visited, QVector<int> &path, int &path_index)
 {
     // Mark the current node and store it in path[]
@@ -238,4 +274,18 @@ void CDN::findPathsUtil(const int &src, const int &dst, QMap<int, QVector<int>> 
     // Remove current vertex from path[] and mark it as unvisited
     path_index--;
     visited[src] = false;
+}
+
+/* implementation of the method that allows to calculate metrics for last found path */
+void CDN::calcMetricsOfLastFoundPath()
+{
+    this->metricsOfLastFoundPath.clear();
+
+    for (int i=0; i < lastFoundPath.size()-1; i++) {
+        if (matrix[lastFoundPath[i]][lastFoundPath[i+1]] > 0)
+            metricsOfLastFoundPath.append(matrix[lastFoundPath[i]][lastFoundPath[i+1]]);
+
+        if (matrix[lastFoundPath[i+1]][lastFoundPath[i]] > 0)
+            metricsOfLastFoundPath.append(matrix[lastFoundPath[i+1]][lastFoundPath[i]]);
+    }
 }
