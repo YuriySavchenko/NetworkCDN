@@ -12,6 +12,8 @@ GraphWidget::GraphWidget(QWidget *parent)
 {
     this->scene = new QGraphicsScene(this);
     this->info = new Instructions();
+    this->histogram = new HistogramConstructor();
+
     scene->setItemIndexMethod(QGraphicsScene::NoIndex);
     scene->setSceneRect(-200, -200, 400, 400);
     setScene(scene);
@@ -22,9 +24,6 @@ GraphWidget::GraphWidget(QWidget *parent)
     scale(qreal(0.8), qreal(0.8));
     setMinimumSize(800, 600);
     setWindowTitle(tr("Content Delivery Network"));
-
-    // messagebox for demonstration instructions
-    QMessageBox::information(nullptr, "USEFUL INFO", "OVERVIEW OF RULES IS AVAILABLE BY ENTERING THE WORD: HELP");
 
     // CDN initialization
     this->cdn = new CDN();
@@ -42,6 +41,7 @@ GraphWidget::~GraphWidget()
 
     scene->deleteLater();
     info->deleteLater();
+    histogram->deleteLater();
 }
 
 void GraphWidget::keyPressEvent(QKeyEvent *event)
@@ -120,7 +120,9 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
                 JsonWriter::writeToJson(vectorNodes, fileName);
             }
 
-            QMessageBox::critical(nullptr, "Fail", tr("File has not been loaded!"));
+            else {
+                QMessageBox::critical(nullptr, "Fail", tr("File has not been loaded!"));
+            }
 
             keyboardSequence = 0;
             break;
@@ -183,8 +185,8 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
                             edge->update();
                         }
 
-                        cdn->getMatrix().setRow(vectorNodes.size());
-                        cdn->getMatrix().setCol(vectorNodes.size());
+                        cdn->getMatrix().setRowsCount(vectorNodes.size());
+                        cdn->getMatrix().setColsCount(vectorNodes.size());
                         cdn->getMatrix().transformFrom(vectorEdges);
 
                         // final path of graph with the best metric for delivery
@@ -222,31 +224,47 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
                             qDebug() << cdn->getTable()[i];
 
                         qDebug() << "-----------------------------------------------------------------";
-
-                        keyboardSequence = 0;
-                        break;
                     }
 
                     else {
                         QMessageBox::warning(this, "Nodes Error", "Numbers of nodes cannot exceed count of nodes in Graph!");
-                        keyboardSequence = 0;
-                        return;
                     }
                 }
 
                 else {
                     QMessageBox::critical(this, "Input Error", "Write only two numbers!");
-                    keyboardSequence = 0;
-                    return;
                 }
             }
 
-            QMessageBox::critical(this, "Opening Fail", "File has not been opened!");
-
+            else {
+                QMessageBox::critical(this, "Opening Fail", "File has not been opened!");
+            }
 
             keyboardSequence = 0;
             break;
         }
+        // calculating metrics for histogram in future
+        case Qt::Key_H + Qt::Key_I + Qt::Key_S + Qt::Key_T + Qt::Key_O + Qt::Key_G + Qt::Key_R + Qt::Key_A + Qt::Key_M: {
+            if (isGraphLoaded && !cdn->getLastFoundPath().isEmpty()) {
+                cdn->calcMetricsOfLastFoundPath();
+
+                QVector<double> metrics = cdn->getMetricsOfLastFoundPath();
+                QVector<int> path = cdn->getLastFoundPath();
+
+                this->histogram->showHistogram(cdn->getMetricsOfLastFoundPath(), cdn->getLastFoundPath());
+                this->histogram->saveHistogram("histogram "+QDateTime::currentDateTime().toString()+".png");
+                this->histogram->show();
+                this->histogram->clearHistogram();
+            }
+
+            else {
+                QMessageBox::critical(this, "Opening Fail", "File has not been opened!");
+            }
+
+            keyboardSequence = 0;
+            break;
+        }
+
     }
 }
 
