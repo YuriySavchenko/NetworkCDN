@@ -17,6 +17,7 @@ const QString SHUFFLE="command allows to shuffle all nodes on the graph.";
 const QString SAVE="command allows to save all changes on the scene.";
 const QString OPEN="command allows to upload the saved scene.";
 const QString CALC="command allows to find the best path on the graph (enter nodes through comma: 1,7).";
+const QString HISTOGRAM="command allows to create histogram which demonstrates metrics.";
 
 const QString ADDITIONAL_OPTIONS="\n\nControlling of the application by additional commands:\n\n";
 
@@ -54,6 +55,7 @@ public:
     QLabel *labelSave;                          //!< A \a label for demonstration \b Save \e command
     QLabel *labelOpen;                          //!< A \a label for demonstration \b Open \e command
     QLabel *labelCalc;                          //!< A \a label for demonstration \b Calc \e command
+    QLabel *labelHistogram;                     //!< A \a label for demonstration \b Histogram command
 
     QLabel *labelPlus;                          //!< A \a label for demonstration \b + \e command
     QLabel *labelMinus;                         //!< A \a label for demonstration \b - \e command
