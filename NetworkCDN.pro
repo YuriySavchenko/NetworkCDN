@@ -9,6 +9,7 @@ HEADERS += \
         headers/CDN/cdn.h \
         headers/CDN/matrix.h \
         headers/Info/instructions.h \
+        headers/Info/histogramconstructor.h \
         headers/QCustomPlot/qcustomplot.h
 
 SOURCES += \
@@ -21,4 +22,5 @@ SOURCES += \
         sources/CDN/cdn.cpp \
         sources/CDN/matrix.cpp \
         sources/Info/instructions.cpp \
+        sources/Info/histogramconstructor.cpp \
         sources/QCustomPlot/qcustomplot.cpp
