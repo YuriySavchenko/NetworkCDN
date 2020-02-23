@@ -1,0 +1,1 @@
+#include "../../headers/Info/tableadjacencyconstructor.h"
