@@ -30,19 +30,19 @@ private:
 
     QVector<QVector<int>> paths;                        //!< A \e variable for saving all \a paths of \b graph between \a source node and \a dest node
     QVector<int> lastFoundPath;                         //!< A \e variable for saving the last found \b path
-    QVector<int> metricsOfLastFoundPath;                //!< A \e variable for saving \e list of \b metrics for the last found \b path
+    QVector<double> metricsOfLastFoundPath;             //!< A \e variable for saving \e list of \b metrics for the last found \b path
 
     ListOfTraversedPaths table;                         //!< A \e variable for saving all founded \a paths on the \b graph
 
 public:
-    Matrix& getMatrix();                                //!< A \e function for getting \b matrix
-    ListOfTraversedPaths getTable();                    //!< A \e function for getting \b table
+    Matrix& getMatrix();                                        //!< A \e function for getting \b matrix
+    ListOfTraversedPaths getTable();                            //!< A \e function for getting \b table
 
-    const QVector<int> & getLastFoundPath();            //!< A \e function for getting the last found \b path
-    const QVector<int> & getMetricsOfLastFoundPath();   //!< A \e function for getting \b metrics of the last found \b path
+    const QVector<int> & getLastFoundPath();                    //!< A \e function for getting the last found \b path
+    const QVector<double> & getMetricsOfLastFoundPath();        //!< A \e function for getting \b metrics of the last found \b path
 
 public:
-    void setMatrix(const Matrix &);             //!< A \e method for saving \b matrix
+    void setMatrix(const Matrix &);                             //!< A \e method for saving \b matrix
 
 public:
     void addPath(const QVector<int> &path);                     //!< A \e method for saving one \a path of \b graph
@@ -59,6 +59,12 @@ private:
     //! \param path_index
     //!
     void findPathsUtil(const int &src, const int &dst, QMap<int, QVector<int>> map, QVector<bool> &visited, QVector<int> &path, int &path_index);
+
+public:
+    //!<
+    //!< \brief calcMetricsOfLastFoundPath
+    //!<
+    void calcMetricsOfLastFoundPath();
 };
 
 #endif // CDN_H
