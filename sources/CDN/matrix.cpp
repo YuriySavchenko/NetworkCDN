@@ -1,28 +1,23 @@
 #include "../../headers/CDN/matrix.h"
 
-/* implementation of default constructor */
-Matrix::Matrix()
-{
-}
-
 /* implementation of explicit constructor, which also gets count of nodes */
 Matrix::Matrix(const int &nodes)
-    : row(nodes), col(nodes)
+    : rows(nodes), cols(nodes)
 {
     // creating matrix
-    for (int i=0; i < row; i++) {
-        QVector<double> tmp(col, 0);
+    for (int i=0; i < rows; i++) {
+        QVector<double> tmp(cols, 0);
         matrix.append(tmp);
     }
 }
 
 /* implementation of explicit constructor, which also gets count of rows and cols */
 Matrix::Matrix(const int &rows, const int &cols)
-    : row(rows), col(cols)
+    : rows(rows), cols(cols)
 {
     // creating matrix
-    for (int i=0; i < row; i++) {
-        QVector<double> tmp(col, 0);
+    for (int i=0; i < rows; i++) {
+        QVector<double> tmp(cols, 0);
         matrix.append(tmp);
     }
 }
@@ -31,8 +26,8 @@ Matrix::Matrix(const int &rows, const int &cols)
 void Matrix::transformFrom(const QVector<Edge *> &edges)
 {
     // creating matrix
-    for (int i=0; i < row; i++) {
-        QVector<double> tmp(col, 0);
+    for (int i=0; i < rows; i++) {
+        QVector<double> tmp(cols, 0);
         matrix.append(tmp);
     }
 
@@ -54,25 +49,25 @@ const QVector<double> Matrix::operator[](const unsigned int &i) const
 }
 
 /* implementation of method for setting value into variable row */
-void Matrix::setRow(const int &row)
+void Matrix::setRowsCount(const int &rows)
 {
-    this->row = row;
+    this->rows = rows;
 }
 
 /* implementation of method for setting value into variable col */
-void Matrix::setCol(const int &col)
+void Matrix::setColsCount(const int &cols)
 {
-    this->col = col;
+    this->cols = cols;
 }
 
 /* implementation of method for getting value from variable row */
-int Matrix::getRow()
+int Matrix::getRowsCount()
 {
-    return this->row;
+    return this->rows;
 }
 
 /* implementation of method for getting value from variable col */
-int Matrix::getCol()
+int Matrix::getColsCount()
 {
-    return this->col;
+    return this->cols;
 }
