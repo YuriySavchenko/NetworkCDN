@@ -8,12 +8,14 @@
 #include <QInputDialog>
 #include <QFileDialog>
 #include <QCoreApplication>
+#include <QDateTime>
 #include <QTime>
 
 #include "../Parse/jsonwriter.h"
 #include "../Parse/jsonreader.h"
 #include "../CDN/cdn.h"
 #include "../Info/instructions.h"
+#include "../Info/histogramconstructor.h"
 
 class Node;
 class Edge;
@@ -43,6 +45,7 @@ private:
     CDN *cdn;
     Instructions *info;
     QGraphicsScene *scene;
+    HistogramConstructor *histogram;
 
     QVector<Node *> vectorNodes;
     QVector<Edge *> vectorEdges;
