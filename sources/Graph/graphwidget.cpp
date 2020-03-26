@@ -13,7 +13,6 @@ GraphWidget::GraphWidget(QWidget *parent)
     this->scene = new QGraphicsScene(this);
     this->info = new Instructions();
     this->histogram = new HistogramConstructor();
-    this->table = table->getInstance();
     this->isGraphLoaded = false;
 
     scene->setItemIndexMethod(QGraphicsScene::NoIndex);
@@ -266,6 +265,29 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
             this->histogram->saveHistogram("histogram "+QDateTime::currentDateTime().toString()+".png");
             this->histogram->show();
             this->histogram->clearHistogram();
+            break;
+        }
+        // changing metrics via random
+        case Qt::Key_R + Qt::Key_A + Qt::Key_N + Qt::Key_D: {
+            keyboardSequence = 0;
+
+            if (!isGraphLoaded) {
+                QMessageBox::critical(this, "Opening Fail", "File has not been opened!");
+                break;
+            }
+
+            this->cdn->resetSettings();
+
+            for (auto & edge : vectorEdges) {
+                double min = 0.2;
+                double max = 0.9;
+                double value = static_cast<double>(rand())/RAND_MAX*(max - min) + min;
+
+                edge->setMetric(QString::number(value, 'g', 2));
+                edge->setColor("blue");
+                edge->update();
+            }
+
             break;
         }
     }
