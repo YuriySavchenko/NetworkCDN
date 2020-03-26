@@ -13,6 +13,7 @@ GraphWidget::GraphWidget(QWidget *parent)
     this->scene = new QGraphicsScene(this);
     this->info = new Instructions();
     this->histogram = new HistogramConstructor();
+    this->table = table->getInstance();
     this->isGraphLoaded = false;
 
     scene->setItemIndexMethod(QGraphicsScene::NoIndex);
@@ -82,6 +83,7 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
         }
         // clearing of main scene if has been entered next key word
         case Qt::Key_C + Qt::Key_L + Qt::Key_O + Qt::Key_S + Qt::Key_E: {
+            this->cdn->resetSettings();
             this->vectorEdges.clear();
             this->vectorNodes.clear();
             scene->clear();
@@ -91,14 +93,15 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
         }
         // setting up of default color for edges
         case Qt::Key_C + Qt::Key_L + Qt::Key_E + Qt::Key_A + Qt::Key_R: {
-            if (isGraphLoaded) {
-                for (auto &edge : vectorEdges) {
+            keyboardSequence = 0;
+
+            if (!isGraphLoaded) break;
+
+            for (auto &edge : vectorEdges) {
                     edge->setColor("blue");
                     edge->update();
-                }
             }
 
-            keyboardSequence = 0;
             break;
         }
         // mixing of nodes if has been entered next key word
@@ -109,161 +112,160 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
         }
         // saving graph configuration if has been entered next key word
         case Qt::Key_S + Qt::Key_A + Qt::Key_V + Qt::Key_E: {
-            if (isGraphLoaded) {
-                QString fileName = QFileDialog::getOpenFileName(this, tr("Choose file for write graph"), "", tr("Files (*.json)"));
-
-                if (fileName.isEmpty()) {
-                    QMessageBox::critical(nullptr, "Fail", "File has not been opened!");
-                    keyboardSequence = 0;
-                    return;
-                }
-
-                JsonWriter::writeToJson(vectorNodes, fileName);
-            }
-
-            else {
-                QMessageBox::critical(nullptr, "Fail", tr("File has not been loaded!"));
-            }
-
             keyboardSequence = 0;
+
+            if (!isGraphLoaded) {
+                QMessageBox::critical(nullptr, "Fail", tr("File has not been loaded!"));
+                break;
+            }
+
+            QString fileName = QFileDialog::getOpenFileName(this, tr("Choose file for write graph"), "", tr("Files (*.json)"));
+
+            if (fileName.isEmpty()) {
+                QMessageBox::critical(nullptr, "Fail", "File has not been opened!");
+                keyboardSequence = 0;
+                return;
+            }
+
+            JsonWriter::writeToJson(vectorNodes, fileName);
             break;
         }
         // opening configuration file and read from it all information for future building of graph
         case Qt::Key_O + Qt::Key_P + Qt::Key_E + Qt::Key_N: {
-            if (vectorNodes.isEmpty() and vectorEdges.isEmpty()) {
-
-                QString fileName = QFileDialog::getOpenFileName(this, tr("Choose graph file"), "", tr("Files (*.json)"));
-
-                if (fileName.isEmpty()) {
-                    QMessageBox::critical(nullptr, "Fail", "File has not been opened!");
-                    keyboardSequence = 0;
-                    return;
-                }
-
-                JsonReader::readFromJson(fileName, vectorNodes, vectorEdges);
-
-                for (int i=0; i < vectorNodes.size(); i++)
-                    scene->addItem(vectorNodes[i]);
-
-                for (int i=0; i < vectorEdges.size(); i++)
-                    scene->addItem(vectorEdges[i]);
-
-                this->count = vectorNodes.size();
-
-                isGraphLoaded = true;
-            }
-
-            else {
-                QMessageBox::critical(nullptr, "Fail", "File is already opened!");
-            }
-
             keyboardSequence = 0;
+
+            if (!vectorNodes.isEmpty() and !vectorEdges.isEmpty()) {
+                QMessageBox::critical(nullptr, "Fail", "File is already opened!");
+                break;
+            }
+
+            QString fileName = QFileDialog::getOpenFileName(this, tr("Choose graph file"), "", tr("Files (*.json)"));
+
+            if (fileName.isEmpty()) {
+                QMessageBox::critical(nullptr, "Fail", "File has not been opened!");
+                break;
+            }
+
+            JsonReader::readFromJson(fileName, vectorNodes, vectorEdges);
+
+            for (int i=0; i < vectorNodes.size(); i++)
+                scene->addItem(vectorNodes[i]);
+
+            for (int i=0; i < vectorEdges.size(); i++)
+                scene->addItem(vectorEdges[i]);
+
+            this->count = vectorNodes.size();
+            isGraphLoaded = true;
             break;
         }
         // calculating delivery path if has been entered next key word
         case Qt::Key_C + Qt::Key_A + Qt::Key_L + Qt::Key_C: {
-            if (isGraphLoaded) {
-                bool ok;
+            keyboardSequence = 0;
 
-                QString text = QInputDialog::getText(
-                            this,
-                            tr("Source and Destonation nodes"),
-                            tr("Source and Destonation nodes: "),
-                            QLineEdit::Normal,
-                            "",
-                            &ok);
+            if (!isGraphLoaded) {
+                QMessageBox::critical(this, "Opening Fail", "File has not been opened!");
+                break;
+            }
 
-                QStringList nodesSrcDst = text.split(",");
+            bool ok;
 
-                if (nodesSrcDst.size() == 2 && nodesSrcDst[0].toInt() && nodesSrcDst[1].toInt()) {
-                    int srcNode = nodesSrcDst[0].toInt();
-                    int dstNode = nodesSrcDst[1].toInt();
+            QString text = QInputDialog::getText(
+                        this,
+                        tr("Source and Destonation nodes"),
+                        tr("Source and Destonation nodes: "),
+                        QLineEdit::Normal,
+                        "",
+                        &ok);
 
-                    if ((srcNode > 0 && srcNode <= count) && (dstNode > 0 && dstNode <= count)) {
-                        // clearing of found paths on the graph
-                        for (auto &edge : vectorEdges) {
-                            edge->setColor("blue");
-                            edge->update();
-                        }
+            QStringList nodesSrcDst = text.split(",");
 
-                        cdn->getMatrix().setRowsCount(vectorNodes.size());
-                        cdn->getMatrix().setColsCount(vectorNodes.size());
-                        cdn->getMatrix().transformFrom(vectorEdges);
+            if (nodesSrcDst.size() == 2 && nodesSrcDst[0].toInt() && nodesSrcDst[1].toInt()) {
+                int srcNode = nodesSrcDst[0].toInt();
+                int dstNode = nodesSrcDst[1].toInt();
 
-                        // final path of graph with the best metric for delivery
-                        QVector<int> path = cdn->findPath(srcNode-1, dstNode-1);
+                if ((srcNode > 0 && srcNode <= count) && (dstNode > 0 && dstNode <= count)) {
+                    // clearing of found paths on the graph
+                    for (auto &edge : vectorEdges) {
+                        edge->setColor("blue");
+                        edge->update();
+                    }
 
-                        if (!path.size())
-                            QMessageBox::warning(this, "Path Error", "All paths are loaded!");
+                    cdn->getMatrix().setRowsCount(vectorNodes.size());
+                    cdn->getMatrix().setColsCount(vectorNodes.size());
+                    cdn->getMatrix().transformFrom(vectorEdges);
 
-                        else {
-                            // looking for edge in vectorEdges by received path of nodes
-                            for (int i=0; i < path.size()-1; i++) {
-                                for (auto &edge : vectorEdges) {
-                                    // if edge painted from lower node to greater node
-                                    if (edge->sourceNode()->name == QString::number(path[i]+1) && edge->destNode()->name == QString::number(path[i+1]+1)) {
-                                        edge->setColor("red");
-                                        edge->update();
+                    // final path of graph with the best metric for delivery
+                    QVector<int> path = cdn->findPath(srcNode-1, dstNode-1);
 
-                                        QTime time;
-                                        time.start();
-                                        while (time.elapsed() != 500) QCoreApplication::processEvents();
-                                        edge->setMetric(QString::number(edge->getMetric().toDouble()-0.1));
-                                        edge->update();
-                                    }
+                    if (!path.size())
+                        QMessageBox::warning(this, "Path Error", "All paths are loaded!");
 
-                                    // if edge painted from greater node to lower node
-                                    else if (edge->sourceNode()->name == QString::number(path[i+1]+1) && edge->destNode()->name == QString::number(path[i]+1)) {
-                                        edge->setColor("red");
-                                        edge->update();
+                    else {
+                        // looking for edge in vectorEdges by received path of nodes
+                        for (int i=0; i < path.size()-1; i++) {
+                            for (auto &edge : vectorEdges) {
+                                // if edge painted from lower node to greater node
+                                if (edge->sourceNode()->name == QString::number(path[i]+1) && edge->destNode()->name == QString::number(path[i+1]+1)) {
+                                    edge->setColor("red");
+                                    edge->update();
 
-                                        QTime time;
-                                        time.start();
-                                        while (time.elapsed() != 500) QCoreApplication::processEvents();
-                                        edge->setMetric(QString::number(edge->getMetric().toDouble()-0.1));
-                                        edge->update();
-                                    }
+                                    QTime time;
+                                    time.start();
+                                    while (time.elapsed() != 500) QCoreApplication::processEvents();
+                                    edge->setMetric(QString::number(edge->getMetric().toDouble()-0.1));
+                                    edge->update();
+                                }
+
+                                // if edge painted from greater node to lower node
+                                else if (edge->sourceNode()->name == QString::number(path[i+1]+1) && edge->destNode()->name == QString::number(path[i]+1)) {
+                                    edge->setColor("red");
+                                    edge->update();
+
+                                    QTime time;
+                                    time.start();
+                                    while (time.elapsed() != 500) QCoreApplication::processEvents();
+                                    edge->setMetric(QString::number(edge->getMetric().toDouble()-0.1));
+                                    edge->update();
                                 }
                             }
                         }
                     }
-
-                    else {
-                        QMessageBox::warning(this, "Nodes Error", "Numbers of nodes cannot exceed count of nodes in Graph!");
-                    }
                 }
 
                 else {
-                    QMessageBox::critical(this, "Input Error", "Write only two numbers!");
+                    QMessageBox::warning(this, "Nodes Error", "Numbers of nodes cannot exceed count of nodes in Graph!");
                 }
             }
 
             else {
-                QMessageBox::critical(this, "Opening Fail", "File has not been opened!");
+                QMessageBox::critical(this, "Input Error", "Write only two numbers!");
             }
 
-            keyboardSequence = 0;
             break;
         }
         // showing of the histogram
         case Qt::Key_H + Qt::Key_I + Qt::Key_S + Qt::Key_T + Qt::Key_O + Qt::Key_G + Qt::Key_R + Qt::Key_A + Qt::Key_M: {
-            if (isGraphLoaded && !cdn->getLastFoundPath().isEmpty()) {
-                cdn->calcMetricsOfLastFoundPath();
-
-                QVector<double> metrics = cdn->getMetricsOfLastFoundPath();
-                QVector<int> path = cdn->getLastFoundPath();
-
-                this->histogram->showHistogram(cdn->getMetricsOfLastFoundPath(), cdn->getLastFoundPath());
-                this->histogram->saveHistogram("histogram "+QDateTime::currentDateTime().toString()+".png");
-                this->histogram->show();
-                this->histogram->clearHistogram();
-            }
-
-            else {
-                QMessageBox::critical(this, "Opening Fail", "File has not been opened!");
-            }
-
             keyboardSequence = 0;
+
+            if (!isGraphLoaded) {
+                QMessageBox::critical(this, "Opening Fail", "File has not been opened!");
+                break;
+            }
+
+            else if (cdn->getLastFoundPath().isEmpty()) {
+                QMessageBox::critical(this, "Showing Fail", "Calculating hasn't been done!");
+                break;
+            }
+
+            cdn->calcMetricsOfLastFoundPath();
+
+            QVector<double> metrics = cdn->getMetricsOfLastFoundPath();
+            QVector<int> path = cdn->getLastFoundPath();
+
+            this->histogram->showHistogram(cdn->getMetricsOfLastFoundPath(), cdn->getLastFoundPath());
+            this->histogram->saveHistogram("histogram "+QDateTime::currentDateTime().toString()+".png");
+            this->histogram->show();
+            this->histogram->clearHistogram();
             break;
         }
     }

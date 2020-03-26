@@ -203,3 +203,12 @@ void CDN::calcMetricsOfLastFoundPath()
             metricsOfLastFoundPath.append(matrix[lastFoundPath[i+1]][lastFoundPath[i]]);
     }
 }
+
+/* implementation of the method that allows to reset all settings for cdn controller */
+void CDN::resetSettings()
+{
+    this->paths.clear();
+    this->lastFoundPath.clear();
+    this->metricsOfLastFoundPath.clear();
+    this->mMapPaths.clear();
+}

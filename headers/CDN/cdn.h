@@ -66,6 +66,12 @@ public:
     //!< \brief calcMetricsOfLastFoundPath
     //!<
     void calcMetricsOfLastFoundPath();
+
+public:
+    //!<
+    //!< \brief resetSettings
+    //!<
+    void resetSettings();
 };
 
 #endif // CDN_H
