@@ -16,6 +16,7 @@
 #include "../CDN/cdn.h"
 #include "../Info/instructions.h"
 #include "../Info/histogramconstructor.h"
+#include "../Info/tableadjacencyconstructor.h"
 
 class Node;
 class Edge;
@@ -46,6 +47,7 @@ private:
     Instructions *info;
     QGraphicsScene *scene;
     HistogramConstructor *histogram;
+    TableAdjacencyConstructor *table;
 
     QVector<Node *> vectorNodes;
     QVector<Edge *> vectorEdges;

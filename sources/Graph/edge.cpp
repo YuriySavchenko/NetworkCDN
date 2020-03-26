@@ -60,6 +60,11 @@ void Edge::setColor(const QString &value)
     color = value;
 }
 
+void Edge::setMetric(const QString &metric)
+{
+    this->metric = metric;
+}
+
 QRectF Edge::boundingRect() const
 {
     if (!source || !dest)
