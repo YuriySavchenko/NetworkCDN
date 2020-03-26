@@ -17,14 +17,14 @@
 class Matrix
 {
 public:
-    Matrix();                                   //!< A \e basic \a constructor
     Matrix(const int &);                        //!< A particular \e constructor with parameter \b nodes
     Matrix(const int &, const int &);           //!< A particular \e constructor with parameters \b rows and \b cols
+    Matrix() = default;                         //!< A \e basic \a constructor
     ~Matrix() = default;                        //!< A \e destructor
 
 private:
-    int row;                                    //!< A \e count of \b rows for matrix
-    int col;                                    //!< A \e count of \b columns for matrix
+    int rows;                                    //!< A \e count of \b rows for matrix
+    int cols;                                    //!< A \e count of \b columns for matrix
     QVector<QVector<double>> matrix;            //!< A \e variable which presents this type \b matrix
 
 public:
@@ -35,12 +35,12 @@ public:
     const QVector<double> operator[](const unsigned int &) const;   //!< Overridden \e operator for getting \b vector by position
 
 public:
-    void setRow(const int &);               //!< A \e method which allows setup value for \b row
-    void setCol(const int &);               //!< A \e method which allows setup value for \b col
+    void setRowsCount(const int &);               //!< A \e method which allows setup value for \b row
+    void setColsCount(const int &);               //!< A \e method which allows setup value for \b col
 
 public:
-    int getRow();                           //!< A \e method which allows give value of \b row
-    int getCol();                           //!< A \e method which allows give value of \b col
+    int getRowsCount();                           //!< A \e method which allows give value of \b row
+    int getColsCount();                           //!< A \e method which allows give value of \b col
 };
 
 #endif // MATRIX_H

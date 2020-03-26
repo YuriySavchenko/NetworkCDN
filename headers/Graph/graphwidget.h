@@ -3,13 +3,19 @@
 
 #include <QGraphicsView>
 #include <QDebug>
+#include <QFont>
+#include <QLabel>
 #include <QInputDialog>
+#include <QFileDialog>
 #include <QCoreApplication>
+#include <QDateTime>
 #include <QTime>
 
 #include "../Parse/jsonwriter.h"
 #include "../Parse/jsonreader.h"
 #include "../CDN/cdn.h"
+#include "../Info/instructions.h"
+#include "../Info/histogramconstructor.h"
 
 class Node;
 class Edge;
@@ -37,11 +43,16 @@ protected:
 
 private:
     CDN *cdn;
+    Instructions *info;
     QGraphicsScene *scene;
+    HistogramConstructor *histogram;
+
     QVector<Node *> vectorNodes;
     QVector<Edge *> vectorEdges;
+
     int keyboardSequence = 0;
     int count;
+    bool isGraphLoaded;
 };
 
 #endif // GRAPHWIDGET_H

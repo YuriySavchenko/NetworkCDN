@@ -21,6 +21,7 @@ public:
     int type() const override { return Type; }
 
     void setColor(const QString &);
+    void setMetric(const QString &);
 
 protected:
     QRectF boundingRect() const override;
