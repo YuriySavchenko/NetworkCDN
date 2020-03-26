@@ -6,12 +6,6 @@ Matrix &CDN::getMatrix()
     return this->matrix;
 }
 
-/* implementation of function which allows to get the table with paths */
-ListOfTraversedPaths CDN::getTable()
-{
-    return this->table;
-}
-
 /* implementation of the function which allows to get the last found path */
 const QVector<int> & CDN::getLastFoundPath()
 {
@@ -37,210 +31,130 @@ void CDN::addPath(const QVector<int> &path)
 }
 
 /* implementation of method which allows to find all neighbors for all nodes */
-QVector<int> CDN::findPaths(const int &src, const int &dst)
+QVector<int> CDN::findPath(const int &src, const int &dst)
 {
-    qDebug() << "-----------------------------------------------------------------";
-    qDebug() << "[!] Start of searching the optimal path [!]";
-    qDebug() << "-----------------------------------------------------------------";
+    if (!mMapPaths.contains(QPair<int, int> {src, dst}) && !mMapPaths.contains(QPair<int, int> {dst, src})) {
+        paths.clear();
 
-    QElapsedTimer timerForFound;
-    qint64 nanoSecTimerForFound;
-    timerForFound.start();
+        // Mark all the vertices as not visited
+        QVector<bool> visited(matrix.getRowsCount(), false);
 
-    // If the source node equals to first node from anyone path that has been found
-    // and the destonation node equal to the last node from anyone path that has been found earlier
-    // we return matching path from table with found paths
-    for (auto &traversed : table) {
-        if (src == traversed.first() && dst == traversed.last()) {
-            nanoSecTimerForFound = timerForFound.nsecsElapsed();
+        // Create an array to store paths
+        QVector<int> path(matrix.getRowsCount());
+        int path_index = 0;
 
-            qDebug() << "-----------------------------------------------------------------";
-            qDebug() << "[+] The whole path has been found in the table [+]";
-            qDebug() << "[+] The time of searching in the table: " << nanoSecTimerForFound/pow(10,9) << " [+]";
-            qDebug() << "-----------------------------------------------------------------";
+        // Create an map which stores a lists of neighbors nodes
+        QMap<int, QVector<int>> neighborsNodes;
 
-            // saving path as last found path
-            this->lastFoundPath = traversed;
+        for (int i=0; i < matrix.getRowsCount(); i++)
+            neighborsNodes[i] = QVector<int> ();
 
-            return traversed;
+        for (int i=0; i < matrix.getRowsCount(); i++) {
+            for (int j=0; j < matrix.getColsCount(); j++) {
+                if (matrix.at(i, j) > 0) {
+                    neighborsNodes[i].append(j);
+                    neighborsNodes[j].append(i);
+                }
+            }
         }
 
-        else if (src == traversed.last() && dst == traversed.first()) {
-            nanoSecTimerForFound = timerForFound.nsecsElapsed();
+        // Call the recursive helper function to find all paths
+        findPathsUtil(src, dst, neighborsNodes, visited, path, path_index);
 
-            qDebug() << "-----------------------------------------------------------------";
-            qDebug() << "[+] The whole path has been found in the table [+]";
-            qDebug() << "[+] The time of searching in the table: " << nanoSecTimerForFound/pow(10,9) << " [+]";
-            qDebug() << "-----------------------------------------------------------------";
+        QVector<QPair<bool, QVector<int>>> markedPaths;
 
-            // saving path as last found path
-            this->lastFoundPath = traversed;
-
-            return traversed;
+        for (int i=0; i < paths.size(); i++) {
+            markedPaths.append(QPair<bool, QVector<int>> {false, paths[i]});
         }
+
+        if (src < dst)
+            mMapPaths[QPair<int, int> {src, dst}] = markedPaths;
+
+        else if (dst < src)
+            mMapPaths[QPair<int, int> {dst, src}] = markedPaths;
     }
 
-    // The loop that allows to check availability of sub path in the table with found paths
-    // If we found the necessary path so we need to highlight the matching path from table
-    // and return the necessary highlighted part
-    for (auto &traversed : table) {
-        for (int i=0; i < traversed.size(); i++) {
-            if (src == traversed.first() && dst == traversed[i]) {
-                QVector<int> subPath;
-                for (int j=0; j < i+1; j++)
-                    subPath.append(traversed[j]);
-
-                nanoSecTimerForFound = timerForFound.nsecsElapsed();
-
-                qDebug() << "-----------------------------------------------------------------";
-                qDebug() << "[+] The part of path has been found in the table [+]";
-                qDebug() << "[+] src ---> dst  == " << src+1 << "--->" << dst+1 << " [+]";
-                qDebug() << "[+] The time of searching in the table: " << nanoSecTimerForFound/pow(10,9) << " [+]";
-                qDebug() << "-----------------------------------------------------------------";
-
-                // saving path as last found path
-                this->lastFoundPath = subPath;
-
-                return subPath;
-            }
-
-            if (src == traversed.last() && dst == traversed[i]) {
-                QVector<int> subPath;
-                for (int j=i; j < traversed.size(); j++)
-                    subPath.append(traversed[j]);
-
-                nanoSecTimerForFound = timerForFound.nsecsElapsed();
-
-                qDebug() << "-----------------------------------------------------------------";
-                qDebug() << "[+] The part of path has been found in the table [+]";
-                qDebug() << "[+] src ---> dst  == " << src+1 << "--->" << dst+1 << " [+]";
-                qDebug() << "[+] The time of searching in the table: " << nanoSecTimerForFound/pow(10,9) << " [+]";
-                qDebug() << "-----------------------------------------------------------------";
-
-                // saving path as last found path
-                this->lastFoundPath = subPath;
-
-                return subPath;
-            }
-
-            if (dst == traversed.first() && src == traversed[i]) {
-                QVector<int> subPath;
-                for (int j=0; j < i+1; j++)
-                    subPath.append(traversed[j]);
-
-                nanoSecTimerForFound = timerForFound.nsecsElapsed();
-
-                qDebug() << "-----------------------------------------------------------------";
-                qDebug() << "[+] The part of path has been found in the table [+]";
-                qDebug() << "[+] src ---> dst  == " << src+1 << "--->" << dst+1 << " [+]";
-                qDebug() << "[+] The time of searching in the table: " << nanoSecTimerForFound/pow(10,9) << " [+]";
-                qDebug() << "-----------------------------------------------------------------";
-
-                // saving path as last found path
-                this->lastFoundPath = subPath;
-
-                return subPath;
-            }
-
-            if (dst == traversed.last() && src == traversed[i]) {
-                QVector<int> subPath;
-                for(int j=i; j < traversed.size(); j++)
-                    subPath.append(traversed[j]);
-
-                nanoSecTimerForFound = timerForFound.nsecsElapsed();
-
-                qDebug() << "-----------------------------------------------------------------";
-                qDebug() << "[+] The part of path has been found in the table [+]";
-                qDebug() << "[+] src ---> dst  == " << src+1 << "--->" << dst+1 << " [+]";
-                qDebug() << "[+] The time of searching in the table: " << nanoSecTimerForFound/pow(10,9) << " [+]";
-                qDebug() << "-----------------------------------------------------------------";
-
-                // saving path as last found path
-                this->lastFoundPath = subPath;
-
-                return subPath;
-            }
-        }
-    }
-
-    QElapsedTimer timerForNewPath;
-    qint64 nanoSecTimerNewPath;
-    timerForNewPath.start();
-
-    paths.clear();
-
-    // Mark all the vertices as not visited
-    QVector<bool> visited(matrix.getRowsCount(), false);
-
-    // Create an array to store paths
-    QVector<int> path(matrix.getRowsCount());
-    int path_index = 0;
-
-    // Create an map which stores a lists of neighbors nodes
-    QMap<int, QVector<int>> neighborsNodes;
-
-    for (int i=0; i < matrix.getRowsCount(); i++)
-        neighborsNodes[i] = QVector<int> ();
-
-    for (int i=0; i < matrix.getRowsCount(); i++) {
-        for (int j=0; j < matrix.getColsCount(); j++) {
-            if (matrix.at(i, j) > 0) {
-                neighborsNodes[i].append(j);
-                neighborsNodes[j].append(i);
-            }
-        }
-    }
-
-    // Call the recursive helper function to find all paths
-    findPathsUtil(src, dst, neighborsNodes, visited, path, path_index);
-
-    // Map for saving all paths and them metric
+    // Map for saving all paths and their metric
     QMap<int, double> matchPathMetric;
+    QVector<QPair<bool, QVector<int>>> foundPaths;
+
+    if (src < dst)
+        foundPaths = mMapPaths[QPair<int, int> {src, dst}];
+
+    else if (dst < src)
+        foundPaths = mMapPaths[QPair<int, int> {dst, src}];
+
+    for (int i=0; i < foundPaths.size(); i++) {
+        for (int j=0; j < foundPaths[i].second.size()-1; j++) {
+            if (matrix.at(foundPaths[i].second[j], foundPaths[i].second[j+1]) > 0.0 &&
+                matrix.at(foundPaths[i].second[j], foundPaths[i].second[j+1]) <= 0.1) {
+                foundPaths[i].first = true;
+                break;
+            }
+
+            else if (matrix.at(foundPaths[i].second[j+1], foundPaths[i].second[j]) > 0.0 &&
+                matrix.at(foundPaths[i].second[j+1], foundPaths[i].second[j]) <= 0.1) {
+                foundPaths[i].first = true;
+                break;
+            }
+
+        }
+    }
 
     // Looking for the best optimality path for delivery
-    for (int i=0; i < paths.size(); i++) {
+    for (int i=0; i < foundPaths.size(); i++) {
+        if (foundPaths[i].first)
+            continue;
+
         double sum = 0;
 
         // Count metric like difference between maximal value and existing
-        for (int j=0; j < paths[i].size()-1; j++) {
+        for (int j=0; j < foundPaths[i].second.size()-1; j++) {
             // If metric value places upper than diagonal
-            if (matrix.at(paths[i][j], paths[i][j+1]) != 0 && matrix.at(paths[i][j+1], paths[i][j]) == 0)
-                sum += 1 - matrix.at(paths[i][j], paths[i][j+1]);
-
+            if (matrix.at(foundPaths[i].second[j], foundPaths[i].second[j+1])) {
+                sum += 1 - matrix.at(foundPaths[i].second[j], foundPaths[i].second[j+1]);
+            }
             // If metric value places under diagonal
-            if (matrix.at(paths[i][j], paths[i][j+1]) == 0 && matrix.at(paths[i][j+1], paths[i][j]) != 0)
-                sum += 1 - matrix.at(paths[i][j+1], paths[i][j]);
+            else if (matrix.at(foundPaths[i].second[j+1], foundPaths[i].second[j])) {
+                sum += 1 - matrix.at(foundPaths[i].second[j+1], foundPaths[i].second[j]);
+            }
         }
 
         matchPathMetric[i] = sum;
     }
 
     double min = INT_MAX;
+    int lastFoundPathIndex = -1;
 
-    for (int i=0; i < paths.size(); i++)
-        if (matchPathMetric[i] < min)
-            min = matchPathMetric[i];
+    for (const auto &key : matchPathMetric.keys())
+        if (matchPathMetric[key] < min)
+            min = matchPathMetric[key];
 
-    for (int i=0; i < paths.size(); i++) {
-        if (matchPathMetric[i] == min) {
-            table.append(paths[i]);
-
-            nanoSecTimerNewPath = timerForNewPath.nsecsElapsed();
-
-            qDebug() << "-----------------------------------------------------------------";
-            qDebug() << "[+] The new path has been found: [!]";
-            qDebug() << paths[i];
-            qDebug() << "[+] The time of searching in the table: " << nanoSecTimerNewPath/pow(10,9) << " [+]";
-            qDebug() << "-----------------------------------------------------------------";
-
+    for (int i=0; i < foundPaths.size(); i++) {
+        if (matchPathMetric[i] == min && !foundPaths[i].first) {
             // saving path as last found path
-            this->lastFoundPath = paths[i];
-
-            return paths[i];
+            lastFoundPathIndex = i;
+            this->lastFoundPath = foundPaths[i].second;
+            break;
         }
     }
 
-    return QVector<int> ();
+    if (lastFoundPathIndex == -1)
+        return QVector<int> {};
+
+    for (int i=0; i < foundPaths[lastFoundPathIndex].second.size()-1; i++) {
+        if (matrix[foundPaths[lastFoundPathIndex].second[i]][foundPaths[lastFoundPathIndex].second[i+1]] > 0.1) {
+            matrix.at(foundPaths[lastFoundPathIndex].second[i], foundPaths[lastFoundPathIndex].second[i+1]) =
+            matrix[foundPaths[lastFoundPathIndex].second[i]][foundPaths[lastFoundPathIndex].second[i+1]]-0.1;
+        }
+
+        else if (matrix[foundPaths[lastFoundPathIndex].second[i+1]][foundPaths[lastFoundPathIndex].second[i]] > 0.1) {
+            matrix.at(foundPaths[lastFoundPathIndex].second[i+1], foundPaths[lastFoundPathIndex].second[i]) =
+            matrix[foundPaths[lastFoundPathIndex].second[i+1]][foundPaths[lastFoundPathIndex].second[i]]-0.1;
+        }
+    }
+
+    return lastFoundPath;
 }
 
 /* implementation of method which is looking for all paths in graph between source node and destonation node */

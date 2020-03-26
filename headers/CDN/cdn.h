@@ -2,6 +2,8 @@
 #define CDN_H
 
 #include <iostream>
+#include <QMap>
+#include <QPair>
 #include <QVector>
 #include <QQueue>
 #include <QDebug>
@@ -11,7 +13,7 @@
 #include "../../headers/Graph/edge.h"
 #include "../../headers/CDN/matrix.h"
 
-using ListOfTraversedPaths = QVector<QVector<int>>;
+using MapOfAllFoundPaths = QMap<QPair<int, int>, QVector<QPair<bool, QVector<int>>>>;
 
 //!
 //! \brief The CDN class \n
@@ -32,11 +34,10 @@ private:
     QVector<int> lastFoundPath;                         //!< A \e variable for saving the last found \b path
     QVector<double> metricsOfLastFoundPath;             //!< A \e variable for saving \e list of \b metrics for the last found \b path
 
-    ListOfTraversedPaths table;                         //!< A \e variable for saving all founded \a paths on the \b graph
+    MapOfAllFoundPaths mMapPaths;                       //!< A \e variable for saving \e map of \b all found \b paths
 
 public:
     Matrix& getMatrix();                                        //!< A \e function for getting \b matrix
-    ListOfTraversedPaths getTable();                            //!< A \e function for getting \b table
 
     const QVector<int> & getLastFoundPath();                    //!< A \e function for getting the last found \b path
     const QVector<double> & getMetricsOfLastFoundPath();        //!< A \e function for getting \b metrics of the last found \b path
@@ -46,7 +47,7 @@ public:
 
 public:
     void addPath(const QVector<int> &path);                     //!< A \e method for saving one \a path of \b graph
-    QVector<int> findPaths(const int &src, const int &dst);     //!< A \e method for searching neighbors \a nodes in \b graph
+    QVector<int> findPath(const int &src, const int &dst);      //!< A \e method for searching neighbors \a nodes in \b graph
 
 private:
     //!

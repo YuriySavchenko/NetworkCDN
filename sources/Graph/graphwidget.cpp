@@ -13,6 +13,7 @@ GraphWidget::GraphWidget(QWidget *parent)
     this->scene = new QGraphicsScene(this);
     this->info = new Instructions();
     this->histogram = new HistogramConstructor();
+    this->isGraphLoaded = false;
 
     scene->setItemIndexMethod(QGraphicsScene::NoIndex);
     scene->setSceneRect(-200, -200, 400, 400);
@@ -190,40 +191,41 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
                         cdn->getMatrix().transformFrom(vectorEdges);
 
                         // final path of graph with the best metric for delivery
-                        QVector<int> path = cdn->findPaths(srcNode-1, dstNode-1);
+                        QVector<int> path = cdn->findPath(srcNode-1, dstNode-1);
 
-                        // looking for edge in vectorEdges by received path of nodes
-                        for (int i=0; i < path.size()-1; i++) {
-                            for (auto &edge : vectorEdges) {
-                                // if edge painted from lower node to greater node
-                                if (edge->sourceNode()->name == QString::number(path[i]+1) && edge->destNode()->name == QString::number(path[i+1]+1)) {
-                                    edge->setColor("red");
-                                    edge->update();
+                        if (!path.size())
+                            QMessageBox::warning(this, "Path Error", "All paths are loaded!");
 
-                                    QTime time;
-                                    time.start();
-                                    while (time.elapsed() != 500) QCoreApplication::processEvents();
-                                }
+                        else {
+                            // looking for edge in vectorEdges by received path of nodes
+                            for (int i=0; i < path.size()-1; i++) {
+                                for (auto &edge : vectorEdges) {
+                                    // if edge painted from lower node to greater node
+                                    if (edge->sourceNode()->name == QString::number(path[i]+1) && edge->destNode()->name == QString::number(path[i+1]+1)) {
+                                        edge->setColor("red");
+                                        edge->update();
 
-                                // if edge painted from greater node to lower node
-                                if (edge->sourceNode()->name == QString::number(path[i+1]+1) && edge->destNode()->name == QString::number(path[i]+1)) {
-                                    edge->setColor("red");
-                                    edge->update();
+                                        QTime time;
+                                        time.start();
+                                        while (time.elapsed() != 500) QCoreApplication::processEvents();
+                                        edge->setMetric(QString::number(edge->getMetric().toDouble()-0.1));
+                                        edge->update();
+                                    }
 
-                                    QTime time;
-                                    time.start();
-                                    while (time.elapsed() != 500) QCoreApplication::processEvents();
+                                    // if edge painted from greater node to lower node
+                                    else if (edge->sourceNode()->name == QString::number(path[i+1]+1) && edge->destNode()->name == QString::number(path[i]+1)) {
+                                        edge->setColor("red");
+                                        edge->update();
+
+                                        QTime time;
+                                        time.start();
+                                        while (time.elapsed() != 500) QCoreApplication::processEvents();
+                                        edge->setMetric(QString::number(edge->getMetric().toDouble()-0.1));
+                                        edge->update();
+                                    }
                                 }
                             }
                         }
-
-                        qDebug() << "-----------------------------------------------------------------";
-                        qDebug() << "[!] The table with previously marked paths: [!]";
-
-                        for (int i=0; i < cdn->getTable().size(); i++)
-                            qDebug() << cdn->getTable()[i];
-
-                        qDebug() << "-----------------------------------------------------------------";
                     }
 
                     else {
@@ -243,7 +245,7 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
             keyboardSequence = 0;
             break;
         }
-        // calculating metrics for histogram in future
+        // showing of the histogram
         case Qt::Key_H + Qt::Key_I + Qt::Key_S + Qt::Key_T + Qt::Key_O + Qt::Key_G + Qt::Key_R + Qt::Key_A + Qt::Key_M: {
             if (isGraphLoaded && !cdn->getLastFoundPath().isEmpty()) {
                 cdn->calcMetricsOfLastFoundPath();
@@ -264,7 +266,6 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
             keyboardSequence = 0;
             break;
         }
-
     }
 }
 
