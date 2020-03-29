@@ -56,6 +56,10 @@ Instructions::Instructions(QDialog *parent) {
     this->labelHistogram = new QLabel("  • HISTOGRAM --- " + HISTOGRAM);
     this->labelHistogram->setFont(boldNormalText);
 
+    // label for RAND
+    this->labelRand = new QLabel("  • RAND --- " + RAND);
+    this->labelRand->setFont(boldNormalText);
+
     // label for +
     this->labelPlus = new QLabel("  + " + PLUS);
     this->labelPlus->setFont(boldNormalText);
@@ -79,6 +83,7 @@ Instructions::Instructions(QDialog *parent) {
     this->mainVerticalLayout->addWidget(labelOpen);
     this->mainVerticalLayout->addWidget(labelCalc);
     this->mainVerticalLayout->addWidget(labelHistogram);
+    this->mainVerticalLayout->addWidget(labelRand);
     this->mainVerticalLayout->addWidget(labelAdditionalOptions);
     this->mainVerticalLayout->addWidget(labelPlus);
     this->mainVerticalLayout->addWidget(labelMinus);
@@ -102,6 +107,7 @@ Instructions::~Instructions() {
     delete labelOpen;
     delete labelCalc;
     delete labelHistogram;
+    delete labelRand;
     delete labelPlus;
     delete labelMinus;
     delete labelBackSpace;
