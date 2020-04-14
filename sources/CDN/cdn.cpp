@@ -65,6 +65,7 @@ QVector<int> CDN::findPath(const int &src, const int &dst)
 
         for (int i=0; i < paths.size(); i++) {
             markedPaths.append(QPair<bool, QVector<int>> {false, paths[i]});
+            qDebug() << paths[i];
         }
 
         if (src < dst)

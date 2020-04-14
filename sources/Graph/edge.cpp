@@ -93,7 +93,7 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
     painter->drawLine(line);
 
     // Draw weight
-    painter->setPen(Qt::yellow);
+    painter->setPen(Qt::black);
     painter->drawText(QPointF {(sourcePoint.x()+destPoint.x())/2,
                                (sourcePoint.y()+destPoint.y())/2},
                                 metric);

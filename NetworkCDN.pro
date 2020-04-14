@@ -24,3 +24,9 @@ SOURCES += \
         sources/Info/instructions.cpp \
         sources/Info/histogramconstructor.cpp \
         sources/QCustomPlot/qcustomplot.cpp
+
+win32 {
+    RC_FILE = objects/icon.rc
+} macx {
+    ICON = objects/icon.png
+}
