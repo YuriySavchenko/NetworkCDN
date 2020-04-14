@@ -10,6 +10,7 @@
 GraphWidget::GraphWidget(QWidget *parent)
     : QGraphicsView(parent)
 {
+    this->setBackgroundBrush(QBrush(Qt::white, Qt::SolidPattern));
     this->scene = new QGraphicsScene(this);
     this->info = new Instructions();
     this->histogram = new HistogramConstructor();
@@ -185,7 +186,7 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
                 if ((srcNode > 0 && srcNode <= count) && (dstNode > 0 && dstNode <= count)) {
                     // clearing of found paths on the graph
                     for (auto &edge : vectorEdges) {
-                        edge->setColor("blue");
+                        edge->setColor("gray");
                         edge->update();
                     }
 
@@ -284,7 +285,7 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
                 double value = static_cast<double>(rand())/RAND_MAX*(max - min) + min;
 
                 edge->setMetric(QString::number(value, 'g', 2));
-                edge->setColor("blue");
+                edge->setColor("black");
                 edge->update();
             }
 
