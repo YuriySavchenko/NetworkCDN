@@ -285,7 +285,8 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
                 double value = static_cast<double>(rand())/RAND_MAX*(max - min) + min;
 
                 edge->setMetric(QString::number(value, 'g', 2));
-                edge->setColor("rand");
+
+                edge->setColor("gray");
                 edge->update();
             }
 
