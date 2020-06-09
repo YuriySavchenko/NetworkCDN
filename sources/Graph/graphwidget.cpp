@@ -99,6 +99,7 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
 
             for (auto &edge : vectorEdges) {
                     edge->setColor("gray");
+                    edge->setPenWidth(1);
                     edge->update();
             }
 
@@ -171,8 +172,8 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
 
             QString text = QInputDialog::getText(
                         this,
-                        tr("Source and Destonation nodes"),
-                        tr("Source and Destonation nodes: "),
+                        tr("Source and Destination nodes"),
+                        tr("Source and Destination nodes: "),
                         QLineEdit::Normal,
                         "",
                         &ok);
@@ -187,6 +188,7 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
                     // clearing of found paths on the graph
                     for (auto &edge : vectorEdges) {
                         edge->setColor("gray");
+                        edge->setPenWidth(1);
                         edge->update();
                     }
 
@@ -206,7 +208,8 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
                             for (auto &edge : vectorEdges) {
                                 // if edge painted from lower node to greater node
                                 if (edge->sourceNode()->name == QString::number(path[i]+1) && edge->destNode()->name == QString::number(path[i+1]+1)) {
-                                    edge->setColor("red");
+                                    edge->setColor("black");
+                                    edge->setPenWidth(3);
                                     edge->update();
 
                                     QTime time;
@@ -218,7 +221,8 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
 
                                 // if edge painted from greater node to lower node
                                 else if (edge->sourceNode()->name == QString::number(path[i+1]+1) && edge->destNode()->name == QString::number(path[i]+1)) {
-                                    edge->setColor("red");
+                                    edge->setColor("black");
+                                    edge->setPenWidth(3);
                                     edge->update();
 
                                     QTime time;
@@ -285,8 +289,8 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
                 double value = static_cast<double>(rand())/RAND_MAX*(max - min) + min;
 
                 edge->setMetric(QString::number(value, 'g', 2));
-
                 edge->setColor("gray");
+                edge->setPenWidth(1);
                 edge->update();
             }
 

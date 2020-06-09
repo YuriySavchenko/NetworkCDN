@@ -21,6 +21,7 @@ public:
     int type() const override { return Type; }
 
     void setColor(const QString &);
+    void setPenWidth(const int &);
     void setMetric(const QString &);
 
 protected:
@@ -35,6 +36,7 @@ private:
     QString metric;
 
     QString color {"gray"};
+    int penWidth {1};
 };
 
 #endif // EDGE_H

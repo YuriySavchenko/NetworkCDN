@@ -60,6 +60,10 @@ void Edge::setColor(const QString &value)
     color = value;
 }
 
+void Edge::setPenWidth(const int &width) {
+    this->penWidth = width;
+}
+
 void Edge::setMetric(const QString &metric)
 {
     this->metric = metric;
@@ -89,12 +93,12 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
         return;
 
     // Draw the line itself
-    painter->setPen(QPen(QColor(color), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    painter->setPen(QPen(QColor(color), penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter->drawLine(line);
 
     // Draw weight
     painter->setPen(Qt::black);
     painter->drawText(QPointF {(sourcePoint.x()+destPoint.x())/2,
-                               (sourcePoint.y()+destPoint.y())/2},
+                               ((sourcePoint.y()+destPoint.y())/2)-5},
                                 metric);
 }
